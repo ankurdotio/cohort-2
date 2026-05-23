@@ -30,6 +30,10 @@ redis.once("ready", () => {
     console.log("Connected to Redis");
 });
 
+redis.on("error", (err) => {
+    console.error("Redis connection error:", err);
+});
+
 
 // ---- Express App Setup ----
 const app = express();
