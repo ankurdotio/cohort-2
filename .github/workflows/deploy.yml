@@ -1,0 +1,34 @@
+name: CD — Test & Deploy
+
+on:
+  push:
+    branches: [main]    # only runs when code lands on main
+
+jobs:
+
+  # ── Job 1: Run tests ─────────────────────────────
+  test:
+    name: Run Tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: '20', cache: 'npm' }
+      - run: npm install
+      - run: npm run test
+
+  # ── Job 2: Deploy (only if tests passed) ─────────
+  deploy:
+    name: Deploy to Production
+    runs-on: ubuntu-latest
+    needs: test              # ← waits for test job to succeed
+    if: github.ref == 'refs/heads/main'
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Deploy to Render
+        run: |
+          curl -X POST "https://api.render.com/deploy/srv-d88t228jo6nc73d9s7q0?key=WCL_ErkeGMA"
+
+          
