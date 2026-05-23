@@ -1,0 +1,844 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CI/CD — Sheryians Coding School</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Fraunces:ital,wght@0,300;0,600;0,700;0,900;1,300&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink:       #0E0F14;
+  --paper:     #F5F2EB;
+  --paper2:    #EDE9DF;
+  --paper3:    #E4DFD3;
+  --rule:      #D4CEBC;
+  --muted:     #6B6455;
+  --accent:    #C84B1F;
+  --accent2:   #1A6B4A;
+  --accent3:   #1B4587;
+  --gold:      #B8860B;
+  --code-bg:   #1A1C24;
+  --code-text: #E2DCCC;
+  --flag-c:    #5BA4CF;
+  --val-c:     #F4A261;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--paper);color:var(--ink);font-family:'DM Sans',sans-serif;font-size:14.5px;line-height:1.7;}
+body::before{content:'SHERYIANS CODING SCHOOL';position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) rotate(-35deg);font-family:'IBM Plex Mono',monospace;font-size:42px;font-weight:600;color:rgba(200,75,31,0.045);white-space:nowrap;pointer-events:none;z-index:0;letter-spacing:0.12em;}
+.layout{display:flex;min-height:100vh;}
+nav{width:260px;flex-shrink:0;background:var(--ink);position:sticky;top:0;height:100vh;overflow-y:auto;padding:32px 0 40px;z-index:10;}
+.nav-brand{padding:0 24px 24px;border-bottom:1px solid rgba(255,255,255,0.07);margin-bottom:20px;}
+.nav-brand .logo{font-family:'Fraunces',serif;font-size:18px;font-weight:700;color:white;}
+.nav-brand .logo span{color:var(--accent);}
+.nav-brand .sub{font-family:'IBM Plex Mono',monospace;font-size:10px;color:rgba(255,255,255,0.35);letter-spacing:0.06em;margin-top:4px;}
+.nav-group-label{font-family:'IBM Plex Mono',monospace;font-size:9px;color:rgba(255,255,255,0.25);letter-spacing:0.12em;text-transform:uppercase;padding:0 24px;margin:16px 0 6px;}
+nav a{display:flex;align-items:center;gap:10px;padding:9px 24px;font-family:'DM Sans',sans-serif;font-size:12.5px;color:rgba(255,255,255,0.5);text-decoration:none;border-left:2px solid transparent;transition:all .15s;}
+nav a:hover{color:white;background:rgba(255,255,255,0.04);}
+nav a.active{color:white;border-left-color:var(--accent);background:rgba(200,75,31,0.08);}
+.nav-num{display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;background:rgba(255,255,255,0.08);font-family:'IBM Plex Mono',monospace;font-size:9px;border-radius:4px;flex-shrink:0;transition:all .15s;}
+nav a:hover .nav-num,nav a.active .nav-num{background:var(--accent);color:white;}
+main{flex:1;max-width:calc(99% - 260px);padding:56px 56px 80px;position:relative;z-index:1;}
+.hero{margin-bottom:64px;padding-bottom:40px;border-bottom:1px solid var(--rule);}
+.hero-eyebrow{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--accent);text-transform:uppercase;letter-spacing:0.12em;margin-bottom:14px;}
+.hero h1{font-family:'Fraunces',serif;font-size:clamp(36px,5vw,58px);font-weight:900;color:var(--ink);line-height:1.05;letter-spacing:-0.02em;margin-bottom:16px;}
+.hero h1 em{font-style:italic;color:var(--accent);}
+.hero-desc{font-family:'DM Sans',sans-serif;font-size:16px;color:var(--muted);max-width:560px;line-height:1.65;margin-bottom:20px;}
+.hero-tags{display:flex;flex-wrap:wrap;gap:8px;}
+.hero-tag{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--muted);border:1px solid var(--rule);border-radius:20px;padding:3px 12px;}
+.section{margin-bottom:72px;animation:fadeUp .4s ease both;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:translateY(0);}}
+.section-header{display:flex;align-items:flex-start;gap:16px;margin-bottom:28px;}
+.section-num-big{font-family:'Fraunces',serif;font-size:48px;font-weight:900;color:var(--rule);line-height:1;user-select:none;flex-shrink:0;}
+.section-title{font-family:'Fraunces',serif;font-size:26px;font-weight:700;color:var(--ink);line-height:1.2;}
+.section-subtitle{font-family:'DM Sans',sans-serif;font-size:13px;color:var(--muted);margin-top:4px;}
+h3{font-family:'Fraunces',serif;font-size:18px;font-weight:600;color:var(--ink);margin:28px 0 12px;}
+p{color:#2A2720;margin-bottom:12px;line-height:1.7;}
+strong{font-weight:500;color:var(--ink);}
+.concept{background:var(--paper2);border-left:3px solid var(--accent3);border-radius:0 8px 8px 0;padding:14px 16px;margin:16px 0;}
+.concept-label{font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--accent3);text-transform:uppercase;letter-spacing:0.12em;margin-bottom:6px;}
+.concept p{font-size:14px;line-height:1.65;margin-bottom:0;}
+.note{display:flex;gap:12px;background:#FEF9EC;border:1px solid #EDD97A;border-radius:8px;padding:12px 14px;margin:16px 0;}
+.note p{font-size:13px;color:#5C4A00;margin-bottom:0;}
+.note p strong{color:#3D3000;}
+.note-icon{flex-shrink:0;font-size:15px;}
+.warn{display:flex;gap:12px;background:#FEF2F2;border:1px solid #FCA5A5;border-radius:8px;padding:12px 14px;margin:16px 0;}
+.warn p{font-size:13px;color:#7F1D1D;margin-bottom:0;}
+.step-label{display:inline-block;font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:600;color:white;background:var(--accent);text-transform:uppercase;letter-spacing:0.06em;padding:3px 10px;border-radius:4px;margin:16px 0 8px;}
+.step-label.green{background:var(--accent2);}
+.step-label.blue{background:var(--accent3);}
+.step-label.gold{background:var(--gold);}
+.code-wrap{margin:16px 0;border-radius:8px;overflow:hidden;}
+.code-header{display:flex;align-items:center;justify-content:space-between;background:#13141B;padding:8px 14px;}
+.code-label{font-family:'IBM Plex Mono',monospace;font-size:10px;color:rgba(255,255,255,0.35);text-transform:uppercase;letter-spacing:0.08em;}
+.copy-btn{font-family:'IBM Plex Mono',monospace;font-size:10px;color:rgba(255,255,255,0.35);background:none;border:1px solid rgba(255,255,255,0.12);border-radius:4px;padding:2px 8px;cursor:pointer;transition:all .15s;}
+.copy-btn:hover{color:white;border-color:rgba(255,255,255,0.3);}
+.code-wrap pre{background:var(--code-bg);color:var(--code-text);font-family:'IBM Plex Mono',monospace;font-size:12.5px;line-height:1.8;padding:16px 18px;overflow-x:auto;margin:0;}
+.c-cmd{color:#87CEEB;font-weight:bold;}
+.c-flag{color:#5BA4CF;}
+.c-val{color:#F4A261;}
+.c-str{color:#98C379;}
+.c-comment{color:rgba(255,255,255,0.28);font-style:italic;}
+.c-key{color:#C678DD;}
+.c-yml{color:#E5C07B;}
+.c-anchor{color:#E06C75;}
+code{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--accent);background:var(--paper3);border:1px solid var(--rule);border-radius:4px;padding:1px 5px;}
+.flag-table{width:100%;border-collapse:collapse;margin:16px 0;}
+.flag-table th{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;background:var(--paper3);padding:8px 12px;text-align:left;font-weight:400;}
+.flag-table td{padding:9px 12px;border-bottom:1px solid var(--rule);font-size:13px;}
+.flag-table tr:hover td{background:var(--paper2);}
+.f-name{font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:600;color:var(--flag-c);}
+.f-val{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--val-c);}
+.f-desc{font-family:'DM Sans',sans-serif;font-size:13px;color:var(--ink);}
+.f-why{font-family:'DM Sans',sans-serif;font-size:12px;color:var(--muted);}
+.compare{width:100%;border-collapse:collapse;margin:16px 0;}
+.compare th{background:var(--ink);color:white;font-size:13px;font-weight:600;padding:10px 14px;text-align:left;}
+.compare th:first-child{border-radius:8px 0 0 0;}
+.compare th:last-child{border-radius:0 8px 0 0;}
+.compare td{padding:10px 14px;border-bottom:1px solid var(--rule);font-size:13px;}
+.compare tr:hover td{background:var(--paper2);}
+.row-label{font-weight:600;color:var(--ink);font-size:13px;}
+.local-val{color:var(--muted);}
+.eks-val{color:var(--accent2);font-weight:500;}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:16px 0;}
+.data-card{background:var(--paper2);border:1px solid var(--rule);border-radius:8px;padding:14px 16px;}
+.data-card-label{font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--accent);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:6px;}
+.data-card-title{font-family:'Fraunces',serif;font-size:15px;font-weight:600;color:var(--ink);margin-bottom:4px;}
+.data-card p{font-size:13px;color:var(--muted);margin-bottom:0;}
+.flow{margin:16px 0;}
+.flow-step{display:flex;}
+.flow-line{display:flex;flex-direction:column;align-items:center;width:28px;flex-shrink:0;}
+.flow-dot{width:10px;height:10px;border-radius:50%;background:var(--accent);flex-shrink:0;margin-top:4px;}
+.flow-connector{width:2px;background:var(--rule);flex:1;min-height:20px;}
+.flow-content{flex:1;padding:0 0 18px 10px;}
+.flow-title{font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;color:var(--ink);}
+.flow-detail{font-family:'DM Sans',sans-serif;font-size:12.5px;color:var(--muted);margin-top:2px;}
+.scale-diagram{background:var(--paper2);border:1px solid var(--rule);border-radius:10px;padding:16px 20px;font-family:'IBM Plex Mono',monospace;font-size:12px;line-height:2;margin:16px 0;color:var(--muted);}
+.scale-diagram .hi{color:var(--ink);font-weight:bold;}
+.scale-diagram .green{color:var(--accent2);}
+.scale-diagram .red{color:var(--accent);}
+/* pipeline visual */
+.pipeline{display:flex;align-items:center;gap:0;margin:20px 0;flex-wrap:wrap;}
+.pipe-stage{display:flex;flex-direction:column;align-items:center;gap:6px;}
+.pipe-box{padding:10px 16px;border-radius:6px;font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;color:white;text-align:center;min-width:90px;}
+.pipe-label{font-family:'DM Sans',sans-serif;font-size:11px;color:var(--muted);text-align:center;max-width:90px;line-height:1.3;}
+.pipe-arrow{font-size:18px;color:var(--rule);padding:0 4px;align-self:flex-start;margin-top:12px;}
+hr.divider{border:none;border-top:1px solid var(--rule);margin:40px 0;}
+footer{display:flex;justify-content:space-between;align-items:center;border-top:2px solid var(--rule);padding:20px 56px;font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--muted);}
+@media(max-width:768px){nav{display:none;}main{padding:32px 24px 60px;max-width:100%;}.two-col{grid-template-columns:1fr;}.pipeline{flex-direction:column;}.pipe-arrow{transform:rotate(90deg);}footer{padding:16px 24px;flex-direction:column;gap:6px;text-align:center;}}
+</style>
+</head>
+<body>
+<div class="layout">
+
+<nav>
+  <div class="nav-brand">
+    <div class="logo">CI<span>/</span>CD</div>
+    <div class="sub">Sheryians Coding School</div>
+  </div>
+  <div class="nav-group-label">Concepts</div>
+  <a href="#what-is" class="active"><span class="nav-num">1</span>What is CI/CD?</a>
+  <a href="#pipeline-anatomy"><span class="nav-num">2</span>Pipeline Anatomy</a>
+  <a href="#github-actions"><span class="nav-num">3</span>GitHub Actions</a>
+  <div class="nav-group-label">Workflows</div>
+  <a href="#workflow-syntax"><span class="nav-num">4</span>Workflow Syntax</a>
+  <a href="#first-pipeline"><span class="nav-num">5</span>First Pipeline</a>
+  <a href="#deploy-pipeline"><span class="nav-num">6</span>Deploy Pipeline</a>
+  <div class="nav-group-label">Production</div>
+  <a href="#secrets"><span class="nav-num">7</span>Secrets & Env Vars</a>
+  <a href="#best-practices"><span class="nav-num">8</span>Best Practices</a>
+</nav>
+
+<main>
+
+  <div class="hero">
+    <div class="hero-eyebrow">Sheryians Coding School · DevOps Module</div>
+    <h1>CI/CD — <em>Ship Without</em><br>Breaking Things</h1>
+    <p class="hero-desc">Continuous Integration and Continuous Deployment — how to automatically test your code on every push and deploy only when tests pass. Built with GitHub Actions.</p>
+    <div class="hero-tags">
+      <span class="hero-tag">GitHub Actions</span>
+      <span class="hero-tag">Workflows</span>
+      <span class="hero-tag">Jest</span>
+      <span class="hero-tag">Auto Deploy</span>
+      <span class="hero-tag">Secrets</span>
+      <span class="hero-tag">YAML</span>
+    </div>
+  </div>
+
+  <!-- SECTION 1 — What is CI/CD -->
+  <section class="section" id="what-is">
+    <div class="section-header">
+      <div class="section-num-big">01</div>
+      <div class="section-title-block">
+        <div class="section-title">What is CI/CD?</div>
+        <div class="section-subtitle">The problem it solves — and why every serious team uses it</div>
+      </div>
+    </div>
+
+    <div class="concept">
+      <div class="concept-label">Key Concept</div>
+      <p><strong>CI (Continuous Integration)</strong> means every time a developer pushes code, an automated pipeline immediately runs the tests. If any test fails, the team knows within minutes — not days. <strong>CD (Continuous Deployment)</strong> means if all tests pass, the code is automatically deployed to production. No manual steps, no "who forgot to deploy?" — it just happens.</p>
+    </div>
+
+    <h3>The problem without CI/CD</h3>
+    <div class="scale-diagram">
+      <span class="hi">Without CI/CD — what actually happens:</span><br>
+      &nbsp;Dev A finishes a feature on Friday → pushes to main<br>
+      &nbsp;<span class="red">Breaks Dev B's feature that was working fine</span><br>
+      &nbsp;Nobody runs tests manually → bug reaches production<br>
+      &nbsp;Users complain → team debugs at 11pm on Friday night<br>
+      <br>
+      <span class="hi">With CI/CD:</span><br>
+      &nbsp;Dev A pushes → pipeline runs tests automatically → <span class="red">tests fail</span><br>
+      &nbsp;<span class="green">PR is blocked from merging → Dev A fixes it before it ever hits main ✅</span><br>
+      &nbsp;Tests pass → code auto-deploys → everyone goes home on time ✅
+    </div>
+
+    <div class="two-col">
+      <div class="data-card">
+        <div class="data-card-label">CI — Continuous Integration</div>
+        <div class="data-card-title">Catch bugs early</div>
+        <p>Run lint, tests, and build checks automatically on every push or PR. Broken code never reaches the main branch.</p>
+      </div>
+      <div class="data-card">
+        <div class="data-card-label">CD — Continuous Deployment</div>
+        <div class="data-card-title">Ship automatically</div>
+        <p>When tests pass on main, automatically deploy to staging or production. No manual SSH, no "can someone deploy this?"</p>
+      </div>
+    </div>
+
+    <h3>Where CI/CD runs</h3>
+    <table class="flag-table">
+      <thead><tr><th>Platform</th><th>What it is</th><th>When to use</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><span class="f-name">GitHub Actions</span></td>
+          <td class="f-desc">Built directly into GitHub. Free for public repos, 2000 min/month free for private.</td>
+          <td class="f-why">Default choice — zero setup if you're already on GitHub</td>
+        </tr>
+        <tr>
+          <td><span class="f-name">GitLab CI</span></td>
+          <td class="f-desc">Built into GitLab. Very powerful, slightly more complex config.</td>
+          <td class="f-why">Teams using GitLab for hosting</td>
+        </tr>
+        <tr>
+          <td><span class="f-name">CircleCI</span></td>
+          <td class="f-desc">Dedicated CI/CD platform. Faster pipelines, paid tiers.</td>
+          <td class="f-why">Large teams needing faster builds</td>
+        </tr>
+        <tr>
+          <td><span class="f-name">Jenkins</span></td>
+          <td class="f-desc">Self-hosted, open source CI server. Maximum control.</td>
+          <td class="f-why">Enterprise teams with infra requirements</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="note">
+      <div class="note-icon">💡</div>
+      <p>We'll use <strong>GitHub Actions</strong> — it requires zero external accounts, lives in your repo, and is what most startups and mid-size companies use in 2025.</p>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- SECTION 2 — Pipeline Anatomy -->
+  <section class="section" id="pipeline-anatomy">
+    <div class="section-header">
+      <div class="section-num-big">02</div>
+      <div class="section-title-block">
+        <div class="section-title">Pipeline Anatomy</div>
+        <div class="section-subtitle">Events → Workflows → Jobs → Steps — how a pipeline is structured</div>
+      </div>
+    </div>
+
+    <div class="pipeline">
+      <div class="pipe-stage">
+        <div class="pipe-box" style="background:var(--accent3);">Event</div>
+        <div class="pipe-label">push / PR / schedule</div>
+      </div>
+      <div class="pipe-arrow">→</div>
+      <div class="pipe-stage">
+        <div class="pipe-box" style="background:var(--accent);">Workflow</div>
+        <div class="pipe-label">.yml file triggered</div>
+      </div>
+      <div class="pipe-arrow">→</div>
+      <div class="pipe-stage">
+        <div class="pipe-box" style="background:var(--gold);">Job</div>
+        <div class="pipe-label">runs on a VM</div>
+      </div>
+      <div class="pipe-arrow">→</div>
+      <div class="pipe-stage">
+        <div class="pipe-box" style="background:var(--accent2);">Steps</div>
+        <div class="pipe-label">individual commands</div>
+      </div>
+      <div class="pipe-arrow">→</div>
+      <div class="pipe-stage">
+        <div class="pipe-box" style="background:#444;">Result</div>
+        <div class="pipe-label">✅ pass or ✗ fail</div>
+      </div>
+    </div>
+
+    <table class="flag-table">
+      <thead><tr><th>Term</th><th>What it is</th><th>Example</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><span class="f-name">Event</span></td>
+          <td class="f-desc">What triggers the workflow to run</td>
+          <td class="f-why">push to main, PR opened, cron schedule</td>
+        </tr>
+        <tr>
+          <td><span class="f-name">Workflow</span></td>
+          <td class="f-desc">A YAML file inside <code>.github/workflows/</code>. One repo can have many.</td>
+          <td class="f-why">ci.yml, deploy.yml, release.yml</td>
+        </tr>
+        <tr>
+          <td><span class="f-name">Job</span></td>
+          <td class="f-desc">A group of steps that run on the same virtual machine. Jobs can run in parallel.</td>
+          <td class="f-why">test, build, deploy (3 separate jobs)</td>
+        </tr>
+        <tr>
+          <td><span class="f-name">Step</span></td>
+          <td class="f-desc">A single command or action inside a job. Steps run sequentially.</td>
+          <td class="f-why">npm install, npm test, docker build</td>
+        </tr>
+        <tr>
+          <td><span class="f-name">Runner</span></td>
+          <td class="f-desc">The virtual machine GitHub spins up to run your job. Starts fresh every time.</td>
+          <td class="f-why">ubuntu-latest, windows-latest, macos-latest</td>
+        </tr>
+        <tr>
+          <td><span class="f-name">Action</span></td>
+          <td class="f-desc">A reusable pre-built step from GitHub Marketplace. Like an npm package for CI.</td>
+          <td class="f-why">actions/checkout, actions/setup-node</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <hr class="divider">
+
+  <!-- SECTION 3 — GitHub Actions -->
+  <section class="section" id="github-actions">
+    <div class="section-header">
+      <div class="section-num-big">03</div>
+      <div class="section-title-block">
+        <div class="section-title">GitHub Actions</div>
+        <div class="section-subtitle">How it's set up — one folder, one YAML file, automatic</div>
+      </div>
+    </div>
+
+    <div class="concept">
+      <div class="concept-label">Key Concept</div>
+      <p>GitHub Actions workflows live in <code>.github/workflows/</code> inside your repo. When you push a <code>.yml</code> file there, GitHub detects it and runs it automatically on the events you specify. No external service to connect — it's built into your repo.</p>
+    </div>
+
+    <div class="code-wrap">
+      <div class="code-header"><span class="code-label">folder structure</span></div>
+      <pre><span class="c-val">your-project/</span>
+├── <span class="c-key">.github/</span>
+│   └── <span class="c-key">workflows/</span>
+│       ├── <span class="c-str">ci.yml</span>        <span class="c-comment">← runs tests on every push/PR</span>
+│       └── <span class="c-str">deploy.yml</span>    <span class="c-comment">← deploys when tests pass on main</span>
+├── <span class="c-str">src/</span>
+├── <span class="c-str">package.json</span>
+└── ...</pre>
+    </div>
+
+    <div class="flow">
+      <div class="flow-step">
+        <div class="flow-line"><div class="flow-dot"></div><div class="flow-connector"></div></div>
+        <div class="flow-content">
+          <div class="flow-title">You push code to GitHub</div>
+          <div class="flow-detail">Any branch, any commit. GitHub detects the push event.</div>
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-line"><div class="flow-dot"></div><div class="flow-connector"></div></div>
+        <div class="flow-content">
+          <div class="flow-title">GitHub finds matching workflow files</div>
+          <div class="flow-detail">Checks <code>.github/workflows/</code> for any <code>.yml</code> with <code>on: push</code>. Queues them to run.</div>
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-line"><div class="flow-dot"></div><div class="flow-connector"></div></div>
+        <div class="flow-content">
+          <div class="flow-title">GitHub spins up a fresh Ubuntu VM (runner)</div>
+          <div class="flow-detail">Clean slate every single run. No leftover state from previous runs.</div>
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-line"><div class="flow-dot"></div><div class="flow-connector"></div></div>
+        <div class="flow-content">
+          <div class="flow-title">Workflow steps execute in order</div>
+          <div class="flow-detail">Checkout code → install Node → install deps → run tests → build.</div>
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-line"><div class="flow-dot" style="background:var(--accent2)"></div></div>
+        <div class="flow-content">
+          <div class="flow-title">Result posted to GitHub</div>
+          <div class="flow-detail">Green checkmark ✅ or red X ✗ on the commit and PR. PR can be blocked from merging if the check fails.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- SECTION 4 — Workflow Syntax -->
+  <section class="section" id="workflow-syntax">
+    <div class="section-header">
+      <div class="section-num-big">04</div>
+      <div class="section-title-block">
+        <div class="section-title">Workflow YAML Syntax</div>
+        <div class="section-subtitle">Every key you'll use — explained line by line</div>
+      </div>
+    </div>
+
+    <div class="code-wrap">
+      <div class="code-header"><span class="code-label">annotated workflow skeleton</span></div>
+      <pre><span class="c-yml">name</span>: <span class="c-str">CI Pipeline</span>           <span class="c-comment"># Display name in GitHub UI</span>
+
+<span class="c-yml">on</span>:                          <span class="c-comment"># What triggers this workflow</span>
+  <span class="c-yml">push</span>:
+    <span class="c-yml">branches</span>: [<span class="c-str">main</span>, <span class="c-str">develop</span>]  <span class="c-comment"># Only on pushes to these branches</span>
+  <span class="c-yml">pull_request</span>:
+    <span class="c-yml">branches</span>: [<span class="c-str">main</span>]           <span class="c-comment"># Also on PRs targeting main</span>
+
+<span class="c-yml">jobs</span>:                        <span class="c-comment"># All the jobs in this workflow</span>
+  <span class="c-anchor">test</span>:                      <span class="c-comment"># Job name (you choose this)</span>
+    <span class="c-yml">runs-on</span>: <span class="c-str">ubuntu-latest</span>  <span class="c-comment"># Which OS to use</span>
+
+    <span class="c-yml">steps</span>:                   <span class="c-comment"># Steps run top to bottom</span>
+      - <span class="c-yml">name</span>: <span class="c-str">Checkout code</span>
+        <span class="c-yml">uses</span>: <span class="c-str">actions/checkout@v4</span>   <span class="c-comment"># Clones your repo onto runner</span>
+
+      - <span class="c-yml">name</span>: <span class="c-str">Setup Node.js</span>
+        <span class="c-yml">uses</span>: <span class="c-str">actions/setup-node@v4</span>
+        <span class="c-yml">with</span>:
+          <span class="c-yml">node-version</span>: <span class="c-str">'20'</span>
+
+      - <span class="c-yml">name</span>: <span class="c-str">Install dependencies</span>
+        <span class="c-yml">run</span>: <span class="c-cmd">npm ci</span>              <span class="c-comment"># ci = clean install (faster, deterministic)</span>
+
+      - <span class="c-yml">name</span>: <span class="c-str">Run tests</span>
+        <span class="c-yml">run</span>: <span class="c-cmd">npm test</span></pre>
+    </div>
+
+    <h3>Key fields explained</h3>
+    <table class="flag-table">
+      <thead><tr><th>Field</th><th>What it does</th><th>Values</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><span class="f-name">on</span></td>
+          <td class="f-desc">Triggers that start the workflow</td>
+          <td class="f-why">push, pull_request, schedule, workflow_dispatch (manual)</td>
+        </tr>
+        <tr>
+          <td><span class="f-name">runs-on</span></td>
+          <td class="f-desc">The OS of the runner VM</td>
+          <td class="f-why">ubuntu-latest (most common), windows-latest, macos-latest</td>
+        </tr>
+        <tr>
+          <td><span class="f-name">uses</span></td>
+          <td class="f-desc">A pre-built Action from GitHub Marketplace</td>
+          <td class="f-why">actions/checkout@v4, actions/setup-node@v4</td>
+        </tr>
+        <tr>
+          <td><span class="f-name">run</span></td>
+          <td class="f-desc">A raw shell command to execute</td>
+          <td class="f-why">npm ci, npm test, npm run build, any bash command</td>
+        </tr>
+        <tr>
+          <td><span class="f-name">with</span></td>
+          <td class="f-desc">Parameters passed to a <code>uses</code> action</td>
+          <td class="f-why">node-version: '20', cache: 'npm'</td>
+        </tr>
+        <tr>
+          <td><span class="f-name">env</span></td>
+          <td class="f-desc">Environment variables for a step or job</td>
+          <td class="f-why">NODE_ENV: test, DATABASE_URL: ${{ secrets.DB_URL }}</td>
+        </tr>
+        <tr>
+          <td><span class="f-name">needs</span></td>
+          <td class="f-desc">Makes a job wait for another job to finish first</td>
+          <td class="f-why">needs: test (deploy job waits for test job to pass)</td>
+        </tr>
+        <tr>
+          <td><span class="f-name">if</span></td>
+          <td class="f-desc">Conditional — only run this job/step if condition is true</td>
+          <td class="f-why">if: github.ref == 'refs/heads/main'</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="note">
+      <div class="note-icon">💡</div>
+      <p>Use <strong><code>npm ci</code></strong> instead of <code>npm install</code> in CI pipelines. It installs exactly what's in <code>package-lock.json</code>, never updates it, and is faster. <code>npm install</code> can silently upgrade packages and cause inconsistent builds.</p>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- SECTION 5 — First Pipeline -->
+  <section class="section" id="first-pipeline">
+    <div class="section-header">
+      <div class="section-num-big">05</div>
+      <div class="section-title-block">
+        <div class="section-title">Your First CI Pipeline</div>
+        <div class="section-subtitle">Test on every PR — blocks merge if tests fail</div>
+      </div>
+    </div>
+
+    <p>This is the core CI pipeline. Every time someone opens a PR targeting <code>main</code>, GitHub runs the tests. If tests fail, the PR gets a red X — it cannot be merged until fixed.</p>
+
+    <div class="step-label">Create the workflow file</div>
+    <div class="code-wrap">
+      <div class="code-header"><span class="code-label">.github/workflows/ci.yml</span><button class="copy-btn" onclick="copyCode(this)">copy</button></div>
+      <pre><span class="c-yml">name</span>: <span class="c-str">CI — Test on PR</span>
+
+<span class="c-yml">on</span>:
+  <span class="c-yml">pull_request</span>:
+    <span class="c-yml">branches</span>: [<span class="c-str">main</span>]
+  <span class="c-yml">push</span>:
+    <span class="c-yml">branches</span>: [<span class="c-str">main</span>]
+
+<span class="c-yml">jobs</span>:
+  <span class="c-anchor">test</span>:
+    <span class="c-yml">name</span>: <span class="c-str">Run Jest Tests</span>
+    <span class="c-yml">runs-on</span>: <span class="c-str">ubuntu-latest</span>
+
+    <span class="c-yml">steps</span>:
+      - <span class="c-yml">name</span>: <span class="c-str">Checkout repository</span>
+        <span class="c-yml">uses</span>: <span class="c-str">actions/checkout@v4</span>
+
+      - <span class="c-yml">name</span>: <span class="c-str">Set up Node.js 20</span>
+        <span class="c-yml">uses</span>: <span class="c-str">actions/setup-node@v4</span>
+        <span class="c-yml">with</span>:
+          <span class="c-yml">node-version</span>: <span class="c-str">'20'</span>
+          <span class="c-yml">cache</span>: <span class="c-str">'npm'</span>         <span class="c-comment"># cache node_modules between runs</span>
+
+      - <span class="c-yml">name</span>: <span class="c-str">Install dependencies</span>
+        <span class="c-yml">run</span>: <span class="c-cmd">npm ci</span>
+
+      - <span class="c-yml">name</span>: <span class="c-str">Run tests</span>
+        <span class="c-yml">run</span>: <span class="c-cmd">npm test</span>
+        <span class="c-yml">env</span>:
+          <span class="c-yml">NODE_ENV</span>: <span class="c-str">test</span>
+
+      - <span class="c-yml">name</span>: <span class="c-str">Upload coverage report</span>   <span class="c-comment"># optional but useful</span>
+        <span class="c-yml">if</span>: <span class="c-str">always()</span>
+        <span class="c-yml">uses</span>: <span class="c-str">actions/upload-artifact@v4</span>
+        <span class="c-yml">with</span>:
+          <span class="c-yml">name</span>: <span class="c-str">coverage-report</span>
+          <span class="c-yml">path</span>: <span class="c-str">coverage/</span></pre>
+    </div>
+
+    <div class="step-label blue">Enforce it — Branch Protection Rule</div>
+    <p>The pipeline only blocks merges if you set up a branch protection rule in GitHub:</p>
+    <div class="code-wrap">
+      <div class="code-header"><span class="code-label">GitHub Settings → Branches → Add Rule</span></div>
+      <pre><span class="c-comment">Go to: Settings → Branches → Add branch protection rule</span>
+
+Branch name pattern: <span class="c-val">main</span>
+
+<span class="c-comment">Check these options:</span>
+✅ Require status checks to pass before merging
+   → Search for and add: <span class="c-str">"Run Jest Tests"</span>  (your job name)
+✅ Require branches to be up to date before merging
+✅ Do not allow bypassing the above settings</pre>
+    </div>
+
+    <div class="scale-diagram">
+      <span class="hi">Dev opens PR: feature/add-login → main</span><br>
+      &nbsp;&nbsp;&nbsp;&nbsp;↓<br>
+      <span class="hi">CI pipeline triggers automatically</span><br>
+      &nbsp;&nbsp;&nbsp;&nbsp;↓<br>
+      <span class="red">npm test → 2 tests fail</span><br>
+      &nbsp;&nbsp;&nbsp;&nbsp;↓<br>
+      <span class="red">PR shows ✗ "Run Jest Tests" — Merge button is greyed out</span><br>
+      &nbsp;&nbsp;&nbsp;&nbsp;↓<br>
+      <span class="hi">Dev fixes tests, pushes again → pipeline re-runs</span><br>
+      &nbsp;&nbsp;&nbsp;&nbsp;↓<br>
+      <span class="green">All tests pass → ✅ green check → Merge button enabled ✅</span>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- SECTION 6 — Deploy Pipeline -->
+  <section class="section" id="deploy-pipeline">
+    <div class="section-header">
+      <div class="section-num-big">06</div>
+      <div class="section-title-block">
+        <div class="section-title">Deploy Pipeline</div>
+        <div class="section-subtitle">Test first, then deploy automatically — only on main</div>
+      </div>
+    </div>
+
+    <div class="concept">
+      <div class="concept-label">Key Concept — needs</div>
+      <p>The <code>needs</code> keyword makes one job depend on another. The <code>deploy</code> job won't start until the <code>test</code> job finishes successfully. If tests fail, deploy never runs. This is the entire safety guarantee of CD in a single keyword.</p>
+    </div>
+
+    <div class="code-wrap">
+      <div class="code-header"><span class="code-label">.github/workflows/deploy.yml</span><button class="copy-btn" onclick="copyCode(this)">copy</button></div>
+      <pre><span class="c-yml">name</span>: <span class="c-str">CD — Test & Deploy</span>
+
+<span class="c-yml">on</span>:
+  <span class="c-yml">push</span>:
+    <span class="c-yml">branches</span>: [<span class="c-str">main</span>]    <span class="c-comment"># only runs when code lands on main</span>
+
+<span class="c-yml">jobs</span>:
+
+  <span class="c-comment"># ── Job 1: Run tests ─────────────────────────────</span>
+  <span class="c-anchor">test</span>:
+    <span class="c-yml">name</span>: <span class="c-str">Run Tests</span>
+    <span class="c-yml">runs-on</span>: <span class="c-str">ubuntu-latest</span>
+    <span class="c-yml">steps</span>:
+      - <span class="c-yml">uses</span>: <span class="c-str">actions/checkout@v4</span>
+      - <span class="c-yml">uses</span>: <span class="c-str">actions/setup-node@v4</span>
+        <span class="c-yml">with</span>: { <span class="c-yml">node-version</span>: <span class="c-str">'20'</span>, <span class="c-yml">cache</span>: <span class="c-str">'npm'</span> }
+      - <span class="c-yml">run</span>: <span class="c-cmd">npm ci</span>
+      - <span class="c-yml">run</span>: <span class="c-cmd">npm test</span>
+
+  <span class="c-comment"># ── Job 2: Deploy (only if tests passed) ─────────</span>
+  <span class="c-anchor">deploy</span>:
+    <span class="c-yml">name</span>: <span class="c-str">Deploy to Production</span>
+    <span class="c-yml">runs-on</span>: <span class="c-str">ubuntu-latest</span>
+    <span class="c-yml">needs</span>: <span class="c-anchor">test</span>              <span class="c-comment"># ← waits for test job to succeed</span>
+    <span class="c-yml">if</span>: <span class="c-str">github.ref == 'refs/heads/main'</span>
+
+    <span class="c-yml">steps</span>:
+      - <span class="c-yml">uses</span>: <span class="c-str">actions/checkout@v4</span>
+
+      - <span class="c-yml">name</span>: <span class="c-str">Deploy to Render / Railway / VPS</span>
+        <span class="c-yml">run</span>: |
+          <span class="c-comment"># Option A — trigger a Render deploy hook</span>
+          <span class="c-cmd">curl</span> <span class="c-flag">-X POST</span> <span class="c-str">"${{ secrets.RENDER_DEPLOY_HOOK }}"</span>
+
+          <span class="c-comment"># Option B — SSH into your VPS and pull + restart</span>
+          <span class="c-comment"># ssh user@server "cd /app && git pull && pm2 restart all"</span></pre>
+    </div>
+
+    <h3>Common deploy targets</h3>
+    <table class="compare">
+      <thead><tr><th>Platform</th><th>How to deploy from Actions</th><th>Complexity</th></tr></thead>
+      <tbody>
+        <tr>
+          <td class="row-label">Render</td>
+          <td class="eks-val">Trigger deploy webhook URL with curl ✓</td>
+          <td class="eks-val">Easiest — one curl command ✓</td>
+        </tr>
+        <tr>
+          <td class="row-label">Railway</td>
+          <td class="eks-val">Use Railway GitHub integration — auto-deploys on push ✓</td>
+          <td class="eks-val">Easiest — no workflow needed ✓</td>
+        </tr>
+        <tr>
+          <td class="row-label">Vercel</td>
+          <td class="local-val">Use vercel/action from Marketplace</td>
+          <td class="eks-val">Easy ✓</td>
+        </tr>
+        <tr>
+          <td class="row-label">VPS (DigitalOcean/EC2)</td>
+          <td class="local-val">SSH in, git pull, pm2 restart</td>
+          <td class="local-val">Medium — need to set up SSH keys as secrets</td>
+        </tr>
+        <tr>
+          <td class="row-label">Docker + ECR</td>
+          <td class="local-val">Build image, push to registry, update container</td>
+          <td class="local-val">Advanced — full production setup</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <hr class="divider">
+
+  <!-- SECTION 7 — Secrets -->
+  <section class="section" id="secrets">
+    <div class="section-header">
+      <div class="section-num-big">07</div>
+      <div class="section-title-block">
+        <div class="section-title">Secrets & Environment Variables</div>
+        <div class="section-subtitle">Never hardcode credentials — store them in GitHub Secrets</div>
+      </div>
+    </div>
+
+    <div class="warn">
+      <div class="note-icon">⚠️</div>
+      <p><strong>Never put API keys, DB passwords, or tokens directly in workflow YAML files.</strong> YAML files are committed to your repo. If your repo is public — or ever becomes public — those credentials are exposed. GitHub Secrets are encrypted and only injected at runtime.</p>
+    </div>
+
+    <div class="step-label">Step 1 — Add secrets to GitHub</div>
+    <div class="code-wrap">
+      <div class="code-header"><span class="code-label">GitHub Settings → Secrets</span></div>
+      <pre><span class="c-comment">Go to: Your Repo → Settings → Secrets and variables → Actions</span>
+<span class="c-comment">Click "New repository secret"</span>
+
+Add these secrets:
+  <span class="c-val">DATABASE_URL</span>      = mongodb+srv://user:pass@cluster...
+  <span class="c-val">JWT_SECRET</span>        = your_super_secret_jwt_key
+  <span class="c-val">RENDER_DEPLOY_HOOK</span> = https://api.render.com/deploy/srv-xxx...</pre>
+    </div>
+
+    <div class="step-label">Step 2 — Use secrets in workflow</div>
+    <div class="code-wrap">
+      <div class="code-header"><span class="code-label">.github/workflows/ci.yml — using secrets</span><button class="copy-btn" onclick="copyCode(this)">copy</button></div>
+      <pre><span class="c-yml">steps</span>:
+  - <span class="c-yml">name</span>: <span class="c-str">Run tests</span>
+    <span class="c-yml">run</span>: <span class="c-cmd">npm test</span>
+    <span class="c-yml">env</span>:
+      <span class="c-comment"># Secrets injected as environment variables at runtime</span>
+      <span class="c-yml">DATABASE_URL</span>: <span class="c-str">${{ secrets.DATABASE_URL }}</span>
+      <span class="c-yml">JWT_SECRET</span>:   <span class="c-str">${{ secrets.JWT_SECRET }}</span>
+      <span class="c-yml">NODE_ENV</span>:     <span class="c-str">test</span>
+
+  - <span class="c-yml">name</span>: <span class="c-str">Deploy</span>
+    <span class="c-yml">run</span>: <span class="c-cmd">curl</span> <span class="c-flag">-X POST</span> <span class="c-str">"${{ secrets.RENDER_DEPLOY_HOOK }}"</span></pre>
+    </div>
+
+    <div class="note">
+      <div class="note-icon">💡</div>
+      <p>GitHub automatically <strong>masks secrets in logs</strong>. Even if a step accidentally prints <code>process.env.DATABASE_URL</code>, GitHub replaces the value with <code>***</code> in the action logs. The actual value is never visible.</p>
+    </div>
+
+    <h3>Environment-specific variables</h3>
+    <div class="code-wrap">
+      <div class="code-header"><span class="code-label">Different values per environment</span><button class="copy-btn" onclick="copyCode(this)">copy</button></div>
+      <pre><span class="c-yml">jobs</span>:
+  <span class="c-anchor">test</span>:
+    <span class="c-yml">environment</span>: <span class="c-str">staging</span>    <span class="c-comment"># uses staging secrets</span>
+    <span class="c-yml">env</span>:
+      <span class="c-yml">DATABASE_URL</span>: <span class="c-str">${{ secrets.STAGING_DB_URL }}</span>
+
+  <span class="c-anchor">deploy</span>:
+    <span class="c-yml">environment</span>: <span class="c-str">production</span> <span class="c-comment"># uses production secrets</span>
+    <span class="c-yml">needs</span>: <span class="c-anchor">test</span>
+    <span class="c-yml">env</span>:
+      <span class="c-yml">DATABASE_URL</span>: <span class="c-str">${{ secrets.PROD_DB_URL }}</span></pre>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- SECTION 8 — Best Practices -->
+  <section class="section" id="best-practices">
+    <div class="section-header">
+      <div class="section-num-big">08</div>
+      <div class="section-title-block">
+        <div class="section-title">Best Practices</div>
+        <div class="section-subtitle">What separates a real CI/CD pipeline from a toy one</div>
+      </div>
+    </div>
+
+    <h3>Cache dependencies to speed up builds</h3>
+    <p>By default, the runner installs all <code>node_modules</code> from scratch every run — slow. Enable caching and subsequent runs skip the install if <code>package-lock.json</code> hasn't changed.</p>
+    <div class="code-wrap">
+      <div class="code-header"><span class="code-label">Caching node_modules</span><button class="copy-btn" onclick="copyCode(this)">copy</button></div>
+      <pre>- <span class="c-yml">uses</span>: <span class="c-str">actions/setup-node@v4</span>
+  <span class="c-yml">with</span>:
+    <span class="c-yml">node-version</span>: <span class="c-str">'20'</span>
+    <span class="c-yml">cache</span>: <span class="c-str">'npm'</span>    <span class="c-comment"># ← one line — cuts install time from 60s to 5s</span></pre>
+    </div>
+
+    <h3>Run jobs in parallel to save time</h3>
+    <div class="code-wrap">
+      <div class="code-header"><span class="code-label">Parallel jobs — lint and test simultaneously</span><button class="copy-btn" onclick="copyCode(this)">copy</button></div>
+      <pre><span class="c-yml">jobs</span>:
+  <span class="c-anchor">lint</span>:                           <span class="c-comment"># runs at the same time as test</span>
+    <span class="c-yml">runs-on</span>: <span class="c-str">ubuntu-latest</span>
+    <span class="c-yml">steps</span>:
+      - <span class="c-yml">uses</span>: <span class="c-str">actions/checkout@v4</span>
+      - <span class="c-yml">run</span>: <span class="c-cmd">npm ci && npm run lint</span>
+
+  <span class="c-anchor">test</span>:                           <span class="c-comment"># runs at the same time as lint</span>
+    <span class="c-yml">runs-on</span>: <span class="c-str">ubuntu-latest</span>
+    <span class="c-yml">steps</span>:
+      - <span class="c-yml">uses</span>: <span class="c-str">actions/checkout@v4</span>
+      - <span class="c-yml">run</span>: <span class="c-cmd">npm ci && npm test</span>
+
+  <span class="c-anchor">deploy</span>:
+    <span class="c-yml">needs</span>: [<span class="c-anchor">lint</span>, <span class="c-anchor">test</span>]            <span class="c-comment"># waits for BOTH to pass</span>
+    <span class="c-yml">runs-on</span>: <span class="c-str">ubuntu-latest</span>
+    <span class="c-yml">steps</span>:
+      - <span class="c-yml">run</span>: <span class="c-cmd">echo</span> <span class="c-str">"deploying..."</span></pre>
+    </div>
+
+    <h3>Summary of best practices</h3>
+    <table class="flag-table">
+      <thead><tr><th>Practice</th><th>Why it matters</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><span class="f-name">Use npm ci not npm install</span></td>
+          <td class="f-desc">Deterministic installs — same packages every run, never silently upgrades</td>
+        </tr>
+        <tr>
+          <td><span class="f-name">Cache node_modules</span></td>
+          <td class="f-desc">Cuts build time from 60–90s to under 10s on repeat runs</td>
+        </tr>
+        <tr>
+          <td><span class="f-name">Use secrets for credentials</span></td>
+          <td class="f-desc">Never expose DB URLs or API keys in YAML committed to git</td>
+        </tr>
+        <tr>
+          <td><span class="f-name">needs: test before deploy</span></td>
+          <td class="f-desc">Deploy only runs if tests pass — the core safety guarantee</td>
+        </tr>
+        <tr>
+          <td><span class="f-name">Pin action versions (@v4)</span></td>
+          <td class="f-desc">Prevents a third-party action update from silently breaking your pipeline</td>
+        </tr>
+        <tr>
+          <td><span class="f-name">Branch protection rules</span></td>
+          <td class="f-desc">Actually enforces the CI check — without it, devs can merge failing PRs</td>
+        </tr>
+        <tr>
+          <td><span class="f-name">Separate CI and CD workflows</span></td>
+          <td class="f-desc">ci.yml runs on every PR. deploy.yml runs only on main. Cleaner and easier to debug.</td>
+        </tr>
+        <tr>
+          <td><span class="f-name">if: always() on upload steps</span></td>
+          <td class="f-desc">Upload test reports and artifacts even when tests fail — you need the report most when things break</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="concept">
+      <div class="concept-label">The mental model</div>
+      <p>CI/CD is not a DevOps luxury — it's the minimum standard for professional software development. The pipeline is your safety net. Every company you interview at will have one. Building and maintaining pipelines is a skill that signals seniority. <strong>If you can set up CI/CD for your own projects, you'll stand out in every technical interview.</strong></p>
+    </div>
+  </section>
+
+  <footer>
+    <span>Sheryians Coding School · CI/CD Notes</span>
+    <span>Module: DevOps · Topic: GitHub Actions</span>
+  </footer>
+
+</main>
+</div>
+
+<script>
+function copyCode(btn) {
+  const pre = btn.closest('.code-wrap').querySelector('pre');
+  navigator.clipboard.writeText(pre.innerText).then(() => {
+    btn.textContent = 'copied!';
+    setTimeout(() => btn.textContent = 'copy', 2000);
+  });
+}
+const sections = document.querySelectorAll('.section');
+const navLinks  = document.querySelectorAll('nav a');
+const observer  = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      navLinks.forEach(a => a.classList.remove('active'));
+      const link = document.querySelector(`nav a[href="#${e.target.id}"]`);
+      if (link) link.classList.add('active');
+    }
+  });
+}, { threshold: 0.3 });
+sections.forEach(s => observer.observe(s));
+</script>
+</body>
+</html>

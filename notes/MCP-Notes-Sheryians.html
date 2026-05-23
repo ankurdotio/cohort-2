@@ -1,0 +1,887 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MCP — Sheryians Coding School</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Fraunces:ital,wght@0,300;0,600;0,700;0,900;1,300&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#0E0F14;--paper:#F5F2EB;--paper2:#EDE9DF;--paper3:#E4DFD3;--rule:#D4CEBC;--muted:#6B6455;--accent:#C84B1F;--accent2:#1A6B4A;--accent3:#1B4587;--gold:#B8860B;--code-bg:#1A1C24;--code-text:#E2DCCC;--flag-c:#5BA4CF;--val-c:#F4A261;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--paper);color:var(--ink);font-family:'DM Sans',sans-serif;font-size:14.5px;line-height:1.7;}
+body::before{content:'SHERYIANS CODING SCHOOL';position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) rotate(-35deg);font-family:'IBM Plex Mono',monospace;font-size:42px;font-weight:600;color:rgba(200,75,31,0.045);white-space:nowrap;pointer-events:none;z-index:0;letter-spacing:0.12em;}
+.layout{display:flex;min-height:100vh;}
+nav{width:260px;flex-shrink:0;background:var(--ink);position:sticky;top:0;height:100vh;overflow-y:auto;padding:32px 0 40px;z-index:10;}
+.nav-brand{padding:0 24px 24px;border-bottom:1px solid rgba(255,255,255,0.07);margin-bottom:20px;}
+.nav-brand .logo{font-family:'Fraunces',serif;font-size:18px;font-weight:700;color:white;}
+.nav-brand .logo span{color:var(--accent);}
+.nav-brand .sub{font-family:'IBM Plex Mono',monospace;font-size:10px;color:rgba(255,255,255,0.35);letter-spacing:0.06em;margin-top:4px;}
+.nav-group-label{font-family:'IBM Plex Mono',monospace;font-size:9px;color:rgba(255,255,255,0.25);letter-spacing:0.12em;text-transform:uppercase;padding:0 24px;margin:16px 0 6px;}
+nav a{display:flex;align-items:center;gap:10px;padding:9px 24px;font-family:'DM Sans',sans-serif;font-size:12.5px;color:rgba(255,255,255,0.5);text-decoration:none;border-left:2px solid transparent;transition:all .15s;}
+nav a:hover{color:white;background:rgba(255,255,255,0.04);}
+nav a.active{color:white;border-left-color:var(--accent);background:rgba(200,75,31,0.08);}
+.nav-num{display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;background:rgba(255,255,255,0.08);font-family:'IBM Plex Mono',monospace;font-size:9px;border-radius:4px;flex-shrink:0;transition:all .15s;}
+nav a:hover .nav-num,nav a.active .nav-num{background:var(--accent);color:white;}
+main{flex:1;max-width:calc(99% - 260px);padding:56px 56px 80px;position:relative;z-index:1;}
+.hero{margin-bottom:64px;padding-bottom:40px;border-bottom:1px solid var(--rule);}
+.hero-eyebrow{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--accent);text-transform:uppercase;letter-spacing:0.12em;margin-bottom:14px;}
+.hero h1{font-family:'Fraunces',serif;font-size:clamp(36px,5vw,58px);font-weight:900;color:var(--ink);line-height:1.05;letter-spacing:-0.02em;margin-bottom:16px;}
+.hero h1 em{font-style:italic;color:var(--accent);}
+.hero-desc{font-family:'DM Sans',sans-serif;font-size:16px;color:var(--muted);max-width:560px;line-height:1.65;margin-bottom:20px;}
+.hero-tags{display:flex;flex-wrap:wrap;gap:8px;}
+.hero-tag{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--muted);border:1px solid var(--rule);border-radius:20px;padding:3px 12px;}
+.section{margin-bottom:72px;animation:fadeUp .4s ease both;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:translateY(0);}}
+.section-header{display:flex;align-items:flex-start;gap:16px;margin-bottom:28px;}
+.section-num-big{font-family:'Fraunces',serif;font-size:48px;font-weight:900;color:var(--rule);line-height:1;user-select:none;flex-shrink:0;}
+.section-title{font-family:'Fraunces',serif;font-size:26px;font-weight:700;color:var(--ink);line-height:1.2;}
+.section-subtitle{font-family:'DM Sans',sans-serif;font-size:13px;color:var(--muted);margin-top:4px;}
+h3{font-family:'Fraunces',serif;font-size:18px;font-weight:600;color:var(--ink);margin:28px 0 12px;}
+p{color:#2A2720;margin-bottom:12px;line-height:1.7;}
+strong{font-weight:500;color:var(--ink);}
+.concept{background:var(--paper2);border-left:3px solid var(--accent3);border-radius:0 8px 8px 0;padding:14px 16px;margin:16px 0;}
+.concept-label{font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--accent3);text-transform:uppercase;letter-spacing:0.12em;margin-bottom:6px;}
+.concept p{font-size:14px;line-height:1.65;margin-bottom:0;}
+.note{display:flex;gap:12px;background:#FEF9EC;border:1px solid #EDD97A;border-radius:8px;padding:12px 14px;margin:16px 0;}
+.note p{font-size:13px;color:#5C4A00;margin-bottom:0;}
+.note p strong{color:#3D3000;}
+.note-icon{flex-shrink:0;font-size:15px;}
+.warn{display:flex;gap:12px;background:#FEF2F2;border:1px solid #FCA5A5;border-radius:8px;padding:12px 14px;margin:16px 0;}
+.warn p{font-size:13px;color:#7F1D1D;margin-bottom:0;}
+.step-label{display:inline-block;font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:600;color:white;background:var(--accent);text-transform:uppercase;letter-spacing:0.06em;padding:3px 10px;border-radius:4px;margin:16px 0 8px;}
+.step-label.green{background:var(--accent2);}
+.step-label.blue{background:var(--accent3);}
+.step-label.gold{background:var(--gold);}
+.code-wrap{margin:16px 0;border-radius:8px;overflow:hidden;}
+.code-header{display:flex;align-items:center;justify-content:space-between;background:#13141B;padding:8px 14px;}
+.code-label-el{font-family:'IBM Plex Mono',monospace;font-size:10px;color:rgba(255,255,255,0.35);text-transform:uppercase;letter-spacing:0.08em;}
+.copy-btn{font-family:'IBM Plex Mono',monospace;font-size:10px;color:rgba(255,255,255,0.35);background:none;border:1px solid rgba(255,255,255,0.12);border-radius:4px;padding:2px 8px;cursor:pointer;transition:all .15s;}
+.copy-btn:hover{color:white;border-color:rgba(255,255,255,0.3);}
+.code-wrap pre{background:var(--code-bg);color:var(--code-text);font-family:'IBM Plex Mono',monospace;font-size:12.5px;line-height:1.8;padding:16px 18px;overflow-x:auto;margin:0;}
+.c-cmd{color:#87CEEB;font-weight:bold;}.c-flag{color:#5BA4CF;}.c-val{color:#F4A261;}.c-str{color:#98C379;}.c-comment{color:rgba(255,255,255,0.28);font-style:italic;}.c-key{color:#C678DD;}.c-fn{color:#61AFEF;}
+code{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--accent);background:var(--paper3);border:1px solid var(--rule);border-radius:4px;padding:1px 5px;}
+.flag-table{width:100%;border-collapse:collapse;margin:16px 0;}
+.flag-table th{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;background:var(--paper3);padding:8px 12px;text-align:left;font-weight:400;}
+.flag-table td{padding:9px 12px;border-bottom:1px solid var(--rule);font-size:13px;}
+.flag-table tr:hover td{background:var(--paper2);}
+.f-name{font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:600;color:var(--flag-c);}
+.f-val{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--val-c);}
+.f-desc{font-family:'DM Sans',sans-serif;font-size:13px;color:var(--ink);}
+.f-why{font-family:'DM Sans',sans-serif;font-size:12px;color:var(--muted);}
+.compare{width:100%;border-collapse:collapse;margin:16px 0;}
+.compare th{background:var(--ink);color:white;font-size:13px;font-weight:600;padding:10px 14px;text-align:left;}
+.compare th:first-child{border-radius:8px 0 0 0;}.compare th:last-child{border-radius:0 8px 0 0;}
+.compare td{padding:10px 14px;border-bottom:1px solid var(--rule);font-size:13px;}
+.compare tr:hover td{background:var(--paper2);}
+.row-label{font-weight:600;color:var(--ink);font-size:13px;}
+.local-val{color:var(--muted);}
+.eks-val{color:var(--accent2);font-weight:500;}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:16px 0;}
+.three-col{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin:16px 0;}
+.data-card{background:var(--paper2);border:1px solid var(--rule);border-radius:8px;padding:14px 16px;}
+.data-card-label{font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--accent);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:6px;}
+.data-card-title{font-family:'Fraunces',serif;font-size:15px;font-weight:600;color:var(--ink);margin-bottom:4px;}
+.data-card p{font-size:13px;color:var(--muted);margin-bottom:0;}
+.scale-diagram{background:var(--paper2);border:1px solid var(--rule);border-radius:10px;padding:16px 20px;font-family:'IBM Plex Mono',monospace;font-size:12px;line-height:2;margin:16px 0;color:var(--muted);}
+.scale-diagram .hi{color:var(--ink);font-weight:bold;}
+.scale-diagram .green{color:var(--accent2);}
+.scale-diagram .red{color:var(--accent);}
+.problem-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:16px 0;}
+.problem-card{border-radius:10px;padding:16px;border:1px solid var(--rule);background:var(--paper);}
+.problem-icon{font-size:24px;margin-bottom:8px;}
+.problem-title{font-family:'Fraunces',serif;font-size:15px;font-weight:700;color:var(--accent);margin-bottom:4px;}
+.problem-body{font-family:'DM Sans',sans-serif;font-size:13px;color:var(--muted);line-height:1.55;margin-bottom:8px;}
+.problem-fix{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--accent2);background:#EAF5EE;border-radius:4px;padding:3px 8px;display:inline-block;}
+.primitive{border-radius:10px;overflow:hidden;border:1px solid var(--rule);margin-bottom:16px;}
+.primitive-head{padding:12px 16px;display:flex;align-items:center;justify-content:space-between;}
+.primitive-title{font-family:'Fraunces',serif;font-size:17px;font-weight:700;color:white;}
+.primitive-badge{font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:600;color:white;opacity:0.7;padding:2px 8px;border-radius:4px;border:1px solid rgba(255,255,255,0.25);}
+.primitive-body{padding:14px 16px;background:var(--paper);}
+.primitive-body p{font-size:13px;color:var(--muted);margin-bottom:8px;}
+.primitive-body ul{list-style:none;display:flex;flex-direction:column;gap:4px;margin:0;}
+.primitive-body ul li{font-size:13px;color:#2A2720;padding-left:16px;position:relative;}
+.primitive-body ul li::before{content:'→';position:absolute;left:0;color:var(--accent);font-size:11px;top:2px;}
+.token-bar-wrap{margin:16px 0;background:var(--paper2);border:1px solid var(--rule);border-radius:10px;padding:16px 20px;}
+.token-bar-label{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:12px;}
+.token-row{display:flex;align-items:center;gap:10px;margin-bottom:8px;}
+.token-row-label{font-family:'DM Sans',sans-serif;font-size:12px;color:var(--ink);width:160px;flex-shrink:0;}
+.token-bar-outer{flex:1;height:18px;background:var(--paper3);border-radius:4px;overflow:hidden;}
+.token-bar-inner{height:100%;border-radius:4px;display:flex;align-items:center;padding-left:6px;}
+.token-bar-val{font-family:'IBM Plex Mono',monospace;font-size:10px;color:white;font-weight:600;}
+.diagram-wrap{margin:24px 0;border-radius:12px;overflow:hidden;border:1px solid var(--rule);}
+.diagram-lbl{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;padding:10px 16px;border-bottom:1px solid var(--rule);background:var(--paper2);}
+/* Agent flow diagram */
+.agent-flow{background:var(--paper2);border:1px solid var(--rule);border-radius:10px;padding:20px;margin:20px 0;font-family:'IBM Plex Mono',monospace;font-size:12px;}
+.agent-flow-row{display:flex;align-items:center;gap:0;margin-bottom:4px;}
+.af-box{background:var(--ink);color:white;padding:8px 14px;border-radius:6px;font-size:11px;font-weight:600;white-space:nowrap;}
+.af-box.green{background:var(--accent2);}
+.af-box.blue{background:var(--accent3);}
+.af-box.orange{background:var(--accent);}
+.af-box.gold{background:var(--gold);}
+.af-arrow{color:var(--muted);padding:0 10px;font-size:16px;}
+.pkg-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:16px 0;}
+.pkg-card{background:var(--paper2);border:1px solid var(--rule);border-radius:8px;padding:12px 14px;}
+.pkg-name{font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;color:var(--accent3);margin-bottom:4px;}
+.pkg-desc{font-family:'DM Sans',sans-serif;font-size:12px;color:var(--muted);}
+hr.divider{border:none;border-top:1px solid var(--rule);margin:40px 0;}
+footer{display:flex;justify-content:space-between;align-items:center;border-top:2px solid var(--rule);padding:20px 56px;font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--muted);}
+@media(max-width:768px){nav{display:none;}main{padding:32px 24px 60px;max-width:100%;}.two-col,.three-col,.problem-grid,.pkg-grid{grid-template-columns:1fr;}footer{padding:16px 24px;flex-direction:column;gap:6px;text-align:center;}.agent-flow-row{flex-wrap:wrap;}}
+</style>
+</head>
+<body>
+<div class="layout">
+
+<nav>
+  <div class="nav-brand">
+    <div class="logo">MCP<span>.</span>Notes</div>
+    <div class="sub">Sheryians Coding School</div>
+  </div>
+  <div class="nav-group-label">The Problem</div>
+  <a href="#pre-mcp" class="active"><span class="nav-num">1</span>Life Before MCP</a>
+  <a href="#what-is"><span class="nav-num">2</span>What is MCP?</a>
+  <a href="#architecture"><span class="nav-num">3</span>Architecture Diagram</a>
+  <div class="nav-group-label">Primitives</div>
+  <a href="#primitives"><span class="nav-num">4</span>Tools, Resources, Prompts</a>
+  <div class="nav-group-label">Build</div>
+  <a href="#setup"><span class="nav-num">5</span>Setup MCP Server</a>
+  <a href="#tools-impl"><span class="nav-num">6</span>Implementing Tools</a>
+  <a href="#resources-impl"><span class="nav-num">7</span>Implementing Resources</a>
+  <a href="#agent"><span class="nav-num">8</span>LangChain + Mistral Agent</a>
+
+  <div class="nav-group-label">Reality Check</div>
+  <a href="#mcp-problems"><span class="nav-num">9</span>Problems with MCP</a>
+</nav>
+
+<main>
+
+  <div class="hero">
+    <div class="hero-eyebrow">Sheryians Coding School · AI Module</div>
+    <h1>MCP — <em>Model Context</em><br>Protocol</h1>
+    <p class="hero-desc">The open standard that lets any LLM talk to any tool — databases, file systems, APIs, your own code — without custom glue code. The USB-C of AI integrations.</p>
+    <div class="hero-tags">
+      <span class="hero-tag">Anthropic · Nov 2024</span>
+      <span class="hero-tag">Tools</span>
+      <span class="hero-tag">Resources</span>
+      <span class="hero-tag">Prompts</span>
+      <span class="hero-tag">JSON-RPC</span>
+      <span class="hero-tag">Node.js SDK</span>
+      <span class="hero-tag">LangChain.js</span>
+      <span class="hero-tag">MistralAI</span>
+    </div>
+  </div>
+
+  <!-- SECTION 1 — Life Before MCP -->
+  <section class="section" id="pre-mcp">
+    <div class="section-header">
+      <div class="section-num-big">01</div>
+      <div class="section-title-block">
+        <div class="section-title">Life Before MCP</div>
+        <div class="section-subtitle">The painful problems MCP was built to solve</div>
+      </div>
+    </div>
+
+    <p>Before MCP existed, connecting an LLM to external tools was a custom engineering job — every single time. Every model, every tool, every company wrote their own glue code from scratch. Here's what that looked like.</p>
+
+    <div class="problem-grid">
+      <div class="problem-card">
+        <div class="problem-icon">🔌</div>
+        <div class="problem-title">N × M Integration Hell</div>
+        <div class="problem-body">If you had 5 LLMs and 10 tools (Slack, GitHub, database, file system, calendar...) you needed 50 custom integrations. Each one was bespoke — different auth, different format, different error handling. Change one tool and you break integrations with every model.</div>
+        <span class="problem-fix">MCP fix → one standard server, works with any MCP-compatible LLM</span>
+      </div>
+      <div class="problem-card">
+        <div class="problem-icon">📋</div>
+        <div class="problem-title">Copy-Pasting Context Manually</div>
+        <div class="problem-body">Want Claude to read your codebase? You copy-paste files into the chat. Want it to reference your docs? Copy-paste again. Want it to check the database? Manually query and paste the results in. There was no way for the AI to reach out and get context itself.</div>
+        <span class="problem-fix">MCP fix → Resources let AI pull context on demand</span>
+      </div>
+      <div class="problem-card">
+        <div class="problem-icon">🔄</div>
+        <div class="problem-title">Reinventing the Wheel Every Time</div>
+        <div class="problem-body">Teams at different companies all built GitHub integrations for their AI tools independently. All different formats, all incompatible, all separately maintained. The same work done thousands of times across the industry with no shared standard.</div>
+        <span class="problem-fix">MCP fix → build once, publish to registry, anyone uses it</span>
+      </div>
+      <div class="problem-card">
+        <div class="problem-icon">🔒</div>
+        <div class="problem-title">No Standard Security Model</div>
+        <div class="problem-body">Every custom integration handled auth differently. Some passed API keys in plaintext. Some had no sandboxing. There was no consistent model for what an AI was and wasn't allowed to do with a connected tool.</div>
+        <span class="problem-fix">MCP fix → defined auth model (OAuth 2.1), sandboxing, consent flows</span>
+      </div>
+      <div class="problem-card">
+        <div class="problem-icon">🧩</div>
+        <div class="problem-title">Tools Locked to One AI</div>
+        <div class="problem-body">A tool you built for ChatGPT didn't work with Claude. A plugin for Claude didn't work with Gemini. Every AI platform had its own proprietary plugin format. You couldn't reuse anything across models.</div>
+        <span class="problem-fix">MCP fix → model-agnostic standard — same server works with Claude, GPT, Gemini</span>
+      </div>
+      <div class="problem-card">
+        <div class="problem-icon">⚡</div>
+        <div class="problem-title">No Discovery Mechanism</div>
+        <div class="problem-body">The LLM had no way to ask "what tools are available?" You had to hardcode every capability into the system prompt upfront. Adding a new tool meant updating every prompt in every deployment.</div>
+        <span class="problem-fix">MCP fix → dynamic tool discovery via tools/list at runtime</span>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- SECTION 2 — What is MCP -->
+  <section class="section" id="what-is">
+    <div class="section-header">
+      <div class="section-num-big">02</div>
+      <div class="section-title-block">
+        <div class="section-title">What is MCP?</div>
+        <div class="section-subtitle">An open standard — not a framework, not a library, a protocol</div>
+      </div>
+    </div>
+
+    <div class="concept">
+      <div class="concept-label">Key Concept</div>
+      <p><strong>MCP (Model Context Protocol)</strong> is an open standard published by Anthropic in November 2024 that defines how AI applications discover and invoke external tools, read data, and use reusable prompt templates — all through a consistent JSON-RPC interface. Think of it like HTTP for AI integrations: it doesn't matter which LLM or which tool — if both speak MCP, they work together.</p>
+    </div>
+
+    <div class="scale-diagram">
+      <span class="hi">The USB-C analogy:</span><br>
+      &nbsp;Before USB-C: every device had a different cable. Nokia charger ≠ Motorola charger.<br>
+      &nbsp;USB-C: one standard port, every device works with every charger.<br>
+      <br>
+      <span class="hi">Before MCP:</span>  every AI needed custom code to talk to every tool.<br>
+      <span class="green">After MCP:</span>  one MCP server, every MCP-compatible AI talks to it. ✅
+    </div>
+
+    <h3>Who has adopted MCP (as of 2025)</h3>
+    <div class="two-col">
+      <div class="data-card">
+        <div class="data-card-label">AI Providers</div>
+        <div class="data-card-title">Adopted MCP natively</div>
+        <p>Anthropic (Claude), OpenAI (ChatGPT), Google DeepMind (Gemini), Microsoft (Copilot), Cloudflare — all officially support the MCP standard.</p>
+      </div>
+      <div class="data-card">
+        <div class="data-card-label">Developer Tools</div>
+        <div class="data-card-title">Built-in MCP support</div>
+        <p>Cursor IDE, VS Code (GitHub Copilot), Claude Desktop, Claude Code — all natively connect to MCP servers. You can plug in any MCP server and they instantly gain its capabilities.</p>
+      </div>
+    </div>
+
+    <h3>How it works — the basic flow</h3>
+    <table class="flag-table">
+      <thead><tr><th>Step</th><th>What happens</th><th>Who does it</th></tr></thead>
+      <tbody>
+        <tr><td><span class="f-name">1. Connect</span></td><td class="f-desc">MCP client connects to the server, negotiates protocol version and capabilities</td><td class="f-why">Client (Claude, Cursor, etc.)</td></tr>
+        <tr><td><span class="f-name">2. Discover</span></td><td class="f-desc">Client calls <code>tools/list</code>, <code>resources/list</code> to see what's available</td><td class="f-why">Client asks server</td></tr>
+        <tr><td><span class="f-name">3. Inject</span></td><td class="f-desc">Tool definitions injected into LLM's context window as available capabilities</td><td class="f-why">Client / host</td></tr>
+        <tr><td><span class="f-name">4. Decide</span></td><td class="f-desc">LLM decides which tool to call based on the user's request</td><td class="f-why">LLM</td></tr>
+        <tr><td><span class="f-name">5. Call</span></td><td class="f-desc">Client sends <code>tools/call</code> request to MCP server with the arguments LLM chose</td><td class="f-why">Client executes</td></tr>
+        <tr><td><span class="f-name">6. Return</span></td><td class="f-desc">Server runs the tool, returns the result back to the LLM's context</td><td class="f-why">Server → LLM</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <hr class="divider">
+
+  <!-- SECTION 3 — Architecture Diagram -->
+  <section class="section" id="architecture">
+    <div class="section-header">
+      <div class="section-num-big">03</div>
+      <div class="section-title-block">
+        <div class="section-title">Architecture Diagram</div>
+        <div class="section-subtitle">Host, Client, Server — how the three layers fit together</div>
+      </div>
+    </div>
+
+    <div class="diagram-wrap">
+      <div class="diagram-lbl">MCP Architecture — Host · Client · Server</div>
+      <svg viewBox="0 0 780 460" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block;background:#F5F2EB;">
+        <defs>
+          <marker id="arr" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#D4CEBC"/></marker>
+          <marker id="arr-b" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#1B4587"/></marker>
+          <marker id="arr-g" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#1A6B4A"/></marker>
+          <marker id="arr-r" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#C84B1F"/></marker>
+          <filter id="sh"><feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="rgba(14,15,20,0.10)"/></filter>
+        </defs>
+        <rect x="20" y="20" width="740" height="200" rx="12" fill="none" stroke="#D4CEBC" stroke-width="1.5" stroke-dasharray="6,4"/>
+        <text x="40" y="42" font-family="IBM Plex Mono,monospace" font-size="10" fill="#6B6455" letter-spacing="0.1em">HOST APPLICATION (Claude Desktop / Cursor IDE / Your App)</text>
+        <rect x="44" y="54" width="200" height="148" rx="10" fill="#0E0F14" filter="url(#sh)"/>
+        <text x="144" y="122" text-anchor="middle" font-family="Fraunces,serif" font-size="15" fill="white" font-weight="700">LLM</text>
+        <text x="144" y="142" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="10" fill="rgba(255,255,255,0.45)">Claude · GPT · Gemini</text>
+        <text x="144" y="162" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="10" fill="rgba(255,255,255,0.35)">Decides which tools to use</text>
+        <text x="144" y="178" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="10" fill="rgba(255,255,255,0.35)">based on user request</text>
+        <rect x="274" y="54" width="200" height="148" rx="10" fill="#1B4587" filter="url(#sh)"/>
+        <text x="374" y="115" text-anchor="middle" font-family="Fraunces,serif" font-size="15" fill="white" font-weight="700">MCP Client</text>
+        <text x="374" y="135" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="10" fill="rgba(255,255,255,0.55)">1:1 with each server</text>
+        <text x="374" y="158" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="10" fill="rgba(255,255,255,0.40)">Discovers tools/resources</text>
+        <text x="374" y="174" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="10" fill="rgba(255,255,255,0.40)">Executes tool calls</text>
+        <text x="374" y="190" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="10" fill="rgba(255,255,255,0.40)">Returns results to LLM</text>
+        <line x1="244" y1="128" x2="274" y2="128" stroke="#1B4587" stroke-width="1.5" marker-end="url(#arr-b)"/>
+        <line x1="274" y1="140" x2="244" y2="140" stroke="#1A6B4A" stroke-width="1.5" marker-end="url(#arr-g)"/>
+        <text x="259" y="124" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="9" fill="#1B4587">call</text>
+        <text x="259" y="157" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="9" fill="#1A6B4A">result</text>
+        <line x1="334" y1="202" x2="185" y2="298" stroke="#C84B1F" stroke-width="1.5" stroke-dasharray="4,3" marker-end="url(#arr-r)"/>
+        <line x1="374" y1="202" x2="374" y2="298" stroke="#C84B1F" stroke-width="1.5" stroke-dasharray="4,3" marker-end="url(#arr-r)"/>
+        <line x1="414" y1="202" x2="563" y2="298" stroke="#C84B1F" stroke-width="1.5" stroke-dasharray="4,3" marker-end="url(#arr-r)"/>
+        <text x="240" y="258" font-family="IBM Plex Mono,monospace" font-size="9" fill="#C84B1F">JSON-RPC</text>
+        <text x="380" y="258" font-family="IBM Plex Mono,monospace" font-size="9" fill="#C84B1F">JSON-RPC</text>
+        <text x="478" y="258" font-family="IBM Plex Mono,monospace" font-size="9" fill="#C84B1F">JSON-RPC</text>
+        <rect x="90" y="300" width="190" height="110" rx="10" fill="#EDE9DF" stroke="#D4CEBC" stroke-width="1" filter="url(#sh)"/>
+        <rect x="90" y="300" width="190" height="30" rx="10" fill="#C84B1F"/>
+        <rect x="90" y="316" width="190" height="14" fill="#C84B1F"/>
+        <text x="185" y="321" text-anchor="middle" font-family="Fraunces,serif" font-size="13" fill="white" font-weight="700">Your MCP Server</text>
+        <text x="185" y="348" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="9" fill="#6B6455">EXPOSES</text>
+        <text x="185" y="366" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="10" fill="#2A2720">Tools · Resources · Prompts</text>
+        <text x="185" y="383" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="10" fill="#6B6455">Node.js / Python / any lang</text>
+        <text x="185" y="399" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="9" fill="#C84B1F">← what we build today</text>
+        <rect x="285" y="300" width="178" height="110" rx="10" fill="#EDE9DF" stroke="#D4CEBC" stroke-width="1" filter="url(#sh)"/>
+        <rect x="285" y="300" width="178" height="30" rx="10" fill="#1B4587"/>
+        <rect x="285" y="316" width="178" height="14" fill="#1B4587"/>
+        <text x="374" y="321" text-anchor="middle" font-family="Fraunces,serif" font-size="13" fill="white" font-weight="700">GitHub MCP Server</text>
+        <text x="374" y="348" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="9" fill="#6B6455">EXPOSES</text>
+        <text x="374" y="366" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="10" fill="#2A2720">create_pr · list_issues</text>
+        <text x="374" y="383" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="10" fill="#2A2720">read_file · commit_code</text>
+        <text x="374" y="399" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="9" fill="#1B4587">community server</text>
+        <rect x="468" y="300" width="190" height="110" rx="10" fill="#EDE9DF" stroke="#D4CEBC" stroke-width="1" filter="url(#sh)"/>
+        <rect x="468" y="300" width="190" height="30" rx="10" fill="#1A6B4A"/>
+        <rect x="468" y="316" width="190" height="14" fill="#1A6B4A"/>
+        <text x="563" y="321" text-anchor="middle" font-family="Fraunces,serif" font-size="13" fill="white" font-weight="700">Postgres MCP Server</text>
+        <text x="563" y="348" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="9" fill="#6B6455">EXPOSES</text>
+        <text x="563" y="366" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="10" fill="#2A2720">query · list_tables</text>
+        <text x="563" y="383" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="10" fill="#2A2720">describe_schema</text>
+        <text x="563" y="399" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="9" fill="#1A6B4A">community server</text>
+        <text x="144" y="430" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="9" fill="#6B6455">stdio transport</text>
+        <text x="374" y="430" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="9" fill="#6B6455">stdio / HTTP+SSE</text>
+        <text x="563" y="430" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="9" fill="#6B6455">stdio transport</text>
+        <rect x="90" y="412" width="190" height="22" rx="5" fill="#E4DFD3" stroke="#D4CEBC" stroke-width="1"/>
+        <text x="185" y="427" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="10" fill="#6B6455">stdin &lt;-&gt; stdout</text>
+      </svg>
+    </div>
+
+    <div class="note">
+      <div class="note-icon">💡</div>
+      <p><strong>Key insight:</strong> The MCP Client and the LLM both live inside the Host application (like Claude Desktop). The MCP Server is <strong>your code</strong> — a separate process that the host spawns and communicates with over stdin/stdout (locally) or HTTP+SSE (remotely). You never modify the host app — you just build the server.</p>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- SECTION 4 — Primitives -->
+  <section class="section" id="primitives">
+    <div class="section-header">
+      <div class="section-num-big">04</div>
+      <div class="section-title-block">
+        <div class="section-title">MCP Primitives</div>
+        <div class="section-subtitle">Three types of things an MCP server can expose — Tools, Resources, and Prompts</div>
+      </div>
+    </div>
+
+    <p>Every MCP server exposes one or more of three primitives. Each has a different purpose and a different interaction model. Together they cover every way an AI needs to interact with external systems.</p>
+
+    <div class="primitive">
+      <div class="primitive-head" style="background:#C84B1F;">
+        <div class="primitive-title">🔧 Tools</div>
+        <div class="primitive-badge">Model-controlled · LLM decides when to call</div>
+      </div>
+      <div class="primitive-body">
+        <p>Tools are executable functions. The LLM autonomously decides to call a tool when it determines it needs to. Tools have a name, description, and JSON Schema input definition. Think of them like function calls — the LLM passes arguments, the server runs the function, and returns a result.</p>
+        <ul>
+          <li>Examples: <code>send_email</code>, <code>query_database</code>, <code>create_github_pr</code>, <code>get_weather</code></li>
+          <li>The LLM reads the tool description and decides when calling it is appropriate</li>
+          <li>Can have side effects — they actually do things, not just read things</li>
+          <li>Discovered via <code>tools/list</code> — server returns all available tool definitions</li>
+          <li>Called via <code>tools/call</code> — server executes the function and returns output</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="primitive">
+      <div class="primitive-head" style="background:#1B4587;">
+        <div class="primitive-title">📄 Resources</div>
+        <div class="primitive-badge">Application-controlled · host app exposes to LLM</div>
+      </div>
+      <div class="primitive-body">
+        <p>Resources are read-only data that the server exposes for context. Unlike tools (which do things), resources are data sources the LLM can read from — files, database rows, config, documentation. Addressed by URI like <code>file:///config.json</code> or <code>db://users/42</code>.</p>
+        <ul>
+          <li>Examples: <code>file:///src/app.js</code>, <code>db://schema/users</code>, <code>config://settings</code></li>
+          <li>Read-only — no side effects, just data access</li>
+          <li>Discovered via <code>resources/list</code> — server returns a list of available URIs</li>
+          <li>Read via <code>resources/read</code> — returns the content at that URI</li>
+          <li>Use for: codebase context, documentation, database schemas, configuration</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="primitive">
+      <div class="primitive-head" style="background:#1A6B4A;">
+        <div class="primitive-title">💬 Prompts</div>
+        <div class="primitive-badge">User-controlled · reusable workflow templates</div>
+      </div>
+      <div class="primitive-body">
+        <p>Prompts are pre-written message templates the user can select to start a structured workflow. They're like slash commands — <code>/debug-this-error</code> or <code>/write-tests-for</code>. The server defines the template and what arguments it takes; the user picks it and fills in the arguments.</p>
+        <ul>
+          <li>Examples: <code>/code-review</code>, <code>/explain-error</code>, <code>/write-migration</code></li>
+          <li>Can embed resources directly — e.g. auto-fetch the relevant file into the prompt</li>
+          <li>Discovered via <code>prompts/list</code> and retrieved via <code>prompts/get</code></li>
+          <li>Different from Tools: the user explicitly triggers a Prompt; the LLM autonomously triggers a Tool</li>
+          <li>Underused feature — most servers only expose Tools, but Prompts enable powerful workflow automation</li>
+        </ul>
+      </div>
+    </div>
+
+    <h3>Quick comparison</h3>
+    <table class="compare">
+      <thead><tr><th>Primitive</th><th>Who triggers it</th><th>Side effects</th><th>Best for</th></tr></thead>
+      <tbody>
+        <tr><td class="row-label">Tool</td><td class="eks-val">LLM decides autonomously</td><td class="local-val">Yes — it does things</td><td class="f-desc">Actions: query DB, send email, run code</td></tr>
+        <tr><td class="row-label">Resource</td><td class="local-val">Application / host exposes</td><td class="eks-val">No — read only</td><td class="f-desc">Context: files, docs, schemas, config</td></tr>
+        <tr><td class="row-label">Prompt</td><td class="local-val">User explicitly picks</td><td class="eks-val">No — template only</td><td class="f-desc">Workflows: slash commands, structured tasks</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <hr class="divider">
+
+  <!-- SECTION 5 — Setup -->
+  <section class="section" id="setup">
+    <div class="section-header">
+      <div class="section-num-big">05</div>
+      <div class="section-title-block">
+        <div class="section-title">Setting Up an MCP Server</div>
+        <div class="section-subtitle">Install the SDK, create the server, connect the transport</div>
+      </div>
+    </div>
+
+    <div class="step-label">Step 1 — Install</div>
+    <div class="code-wrap">
+      <div class="code-header"><span class="code-label-el">Terminal</span><button class="copy-btn" onclick="copyCode(this)">copy</button></div>
+      <pre><span class="c-cmd">npm</span> <span class="c-flag">init</span> <span class="c-flag">-y</span>
+<span class="c-cmd">npm</span> <span class="c-flag">install</span> <span class="c-val">@modelcontextprotocol/sdk</span>
+
+<span class="c-comment"># Add to package.json:</span>
+<span class="c-comment"># "type": "module"</span>
+<span class="c-comment"># "bin": { "my-server": "./src/index.js" }</span></pre>
+    </div>
+
+    <div class="step-label">Step 2 — Create the server skeleton</div>
+    <div class="code-wrap">
+      <div class="code-header"><span class="code-label-el">src/index.js</span><button class="copy-btn" onclick="copyCode(this)">copy</button></div>
+      <pre>#!/usr/bin/env node
+<span class="c-key">import</span> { McpServer }           <span class="c-key">from</span> <span class="c-str">'@modelcontextprotocol/sdk/server/mcp.js'</span>;
+<span class="c-key">import</span> { StdioServerTransport } <span class="c-key">from</span> <span class="c-str">'@modelcontextprotocol/sdk/server/stdio.js'</span>;
+
+<span class="c-comment">// Create the server — give it a name and version</span>
+<span class="c-cmd">const</span> server = <span class="c-cmd">new</span> McpServer({
+  <span class="c-key">name</span>:    <span class="c-str">'my-mcp-server'</span>,
+  <span class="c-key">version</span>: <span class="c-str">'1.0.0'</span>,
+});
+
+<span class="c-comment">// ── Register tools, resources, prompts here ──────</span>
+<span class="c-comment">// (see sections 6 and 7)</span>
+
+<span class="c-comment">// Connect via stdio transport (local usage)</span>
+<span class="c-cmd">const</span> transport = <span class="c-cmd">new</span> StdioServerTransport();
+<span class="c-cmd">await</span> server.<span class="c-cmd">connect</span>(transport);</pre>
+    </div>
+
+    <h3>Transport types</h3>
+    <table class="flag-table">
+      <thead><tr><th>Transport</th><th>How it works</th><th>Use for</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><span class="f-name">stdio</span></td>
+          <td class="f-desc">Host spawns the server as a child process. JSON-RPC messages sent over stdin/stdout. No network involved.</td>
+          <td class="f-why">Local tools — Cursor, Claude Desktop, Claude Code. Default for most servers.</td>
+        </tr>
+        <tr>
+          <td><span class="f-name">HTTP + SSE</span></td>
+          <td class="f-desc">Server runs as an HTTP server. Clients POST requests; server streams responses via Server-Sent Events.</td>
+          <td class="f-why">Remote servers, multi-client deployments, cloud-hosted MCP servers.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="note">
+      <div class="note-icon">💡</div>
+      <p>The <strong>shebang line</strong> (<code>#!/usr/bin/env node</code>) at the top of <code>index.js</code> makes the file directly executable on Unix systems. This is required for Claude Desktop to spawn your server process correctly.</p>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- SECTION 6 — Tools Implementation -->
+  <section class="section" id="tools-impl">
+    <div class="section-header">
+      <div class="section-num-big">06</div>
+      <div class="section-title-block">
+        <div class="section-title">Implementing Tools</div>
+        <div class="section-subtitle">Register functions the LLM can call — with name, description, and schema</div>
+      </div>
+    </div>
+
+    <div class="concept">
+      <div class="concept-label">Key Concept</div>
+      <p>A tool definition has three parts: <strong>name</strong> (what the LLM calls it), <strong>description</strong> (how the LLM decides when to use it — write this well!), and <strong>inputSchema</strong> (the JSON Schema defining what arguments it accepts). The LLM reads all three and autonomously decides when and how to call your tool.</p>
+    </div>
+
+    <div class="step-label">Basic tool — no arguments</div>
+    <div class="code-wrap">
+      <div class="code-header"><span class="code-label-el">src/index.js</span><button class="copy-btn" onclick="copyCode(this)">copy</button></div>
+      <pre><span class="c-key">import</span> { z } <span class="c-key">from</span> <span class="c-str">'zod'</span>; <span class="c-comment">// for schema validation</span>
+
+<span class="c-comment">// Tool with no required arguments</span>
+server.<span class="c-fn">tool</span>(
+  <span class="c-str">'get_server_time'</span>,
+  <span class="c-str">'Returns the current server date and time in ISO format'</span>,
+  {},                           <span class="c-comment">// empty schema — no args needed</span>
+  <span class="c-cmd">async</span> () => ({
+    <span class="c-key">content</span>: [{
+      <span class="c-key">type</span>:  <span class="c-str">'text'</span>,
+      <span class="c-key">text</span>:  <span class="c-cmd">new</span> Date().<span class="c-fn">toISOString</span>(),
+    }]
+  })
+);</pre>
+    </div>
+
+    <div class="step-label">Tool with arguments — Zod schema</div>
+    <div class="code-wrap">
+      <div class="code-header"><span class="code-label-el">Tool with input schema</span><button class="copy-btn" onclick="copyCode(this)">copy</button></div>
+      <pre><span class="c-comment">// npm install zod</span>
+<span class="c-key">import</span> { z } <span class="c-key">from</span> <span class="c-str">'zod'</span>;
+
+server.<span class="c-fn">tool</span>(
+  <span class="c-str">'add_numbers'</span>,
+  <span class="c-str">'Adds two numbers together and returns the result'</span>,
+  {
+    <span class="c-key">a</span>: z.<span class="c-fn">number</span>().<span class="c-fn">describe</span>(<span class="c-str">'First number'</span>),
+    <span class="c-key">b</span>: z.<span class="c-fn">number</span>().<span class="c-fn">describe</span>(<span class="c-str">'Second number'</span>),
+  },
+  <span class="c-cmd">async</span> ({ a, b }) => ({
+    <span class="c-key">content</span>: [{
+      <span class="c-key">type</span>: <span class="c-str">'text'</span>,
+      <span class="c-key">text</span>: <span class="c-str">`${a} + ${b} = ${a + b}`</span>,
+    }]
+  })
+);</pre>
+    </div>
+
+    <div class="step-label">Real-world tool — query a database</div>
+    <div class="code-wrap">
+      <div class="code-header"><span class="code-label-el">Database query tool</span><button class="copy-btn" onclick="copyCode(this)">copy</button></div>
+      <pre>server.<span class="c-fn">tool</span>(
+  <span class="c-str">'query_users'</span>,
+  <span class="c-str">'Search for users in the database by name or email. Returns matching user records.'</span>,
+  {
+    <span class="c-key">search</span>: z.<span class="c-fn">string</span>().<span class="c-fn">describe</span>(<span class="c-str">'Name or email to search for'</span>),
+    <span class="c-key">limit</span>:  z.<span class="c-fn">number</span>().<span class="c-fn">optional</span>().<span class="c-fn">default</span>(<span class="c-val">10</span>).<span class="c-fn">describe</span>(<span class="c-str">'Max results to return'</span>),
+  },
+  <span class="c-cmd">async</span> ({ search, limit }) => {
+    <span class="c-key">try</span> {
+      <span class="c-cmd">const</span> users = <span class="c-cmd">await</span> db.<span class="c-fn">query</span>(
+        <span class="c-str">`SELECT id, name, email FROM users
+         WHERE name ILIKE $1 OR email ILIKE $1
+         LIMIT $2`</span>,
+        [`%${search}%`, limit]
+      );
+      <span class="c-key">return</span> {
+        <span class="c-key">content</span>: [{
+          <span class="c-key">type</span>: <span class="c-str">'text'</span>,
+          <span class="c-key">text</span>: JSON.<span class="c-fn">stringify</span>(users.rows, <span class="c-val">null</span>, <span class="c-val">2</span>),
+        }]
+      };
+    } <span class="c-key">catch</span> (err) {
+      <span class="c-key">return</span> {
+        <span class="c-key">content</span>: [{ <span class="c-key">type</span>: <span class="c-str">'text'</span>, <span class="c-key">text</span>: <span class="c-str">`Error: ${err.message}`</span> }],
+        <span class="c-key">isError</span>: <span class="c-val">true</span>,
+      };
+    }
+  }
+);</pre>
+    </div>
+
+    <div class="warn">
+      <div class="note-icon">⚠️</div>
+      <p><strong>The description is a prompt — write it carefully.</strong> The LLM reads your tool description to decide when to call it. Vague descriptions like <em>"does stuff with users"</em> lead to wrong tool selection. Be specific: what it does, what it returns, when to use it. Bad description = bad tool calls.</p>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- SECTION 7 — Resources Implementation -->
+  <section class="section" id="resources-impl">
+    <div class="section-header">
+      <div class="section-num-big">07</div>
+      <div class="section-title-block">
+        <div class="section-title">Implementing Resources</div>
+        <div class="section-subtitle">Expose read-only data the LLM can pull as context</div>
+      </div>
+    </div>
+
+    <div class="code-wrap">
+      <div class="code-header"><span class="code-label-el">src/index.js — resources</span><button class="copy-btn" onclick="copyCode(this)">copy</button></div>
+      <pre><span class="c-key">import</span> { ListResourcesRequestSchema, ReadResourceRequestSchema }
+  <span class="c-key">from</span> <span class="c-str">'@modelcontextprotocol/sdk/types.js'</span>;
+<span class="c-key">import</span> fs <span class="c-key">from</span> <span class="c-str">'fs/promises'</span>;
+
+<span class="c-comment">// ── LIST — tell clients what resources exist ──────</span>
+server.<span class="c-fn">setRequestHandler</span>(ListResourcesRequestSchema, <span class="c-cmd">async</span> () => ({
+  <span class="c-key">resources</span>: [
+    {
+      <span class="c-key">uri</span>:      <span class="c-str">'file:///config/settings.json'</span>,
+      <span class="c-key">name</span>:     <span class="c-str">'App Settings'</span>,
+      <span class="c-key">mimeType</span>: <span class="c-str">'application/json'</span>,
+    },
+    {
+      <span class="c-key">uri</span>:      <span class="c-str">'db://schema/users'</span>,
+      <span class="c-key">name</span>:     <span class="c-str">'Users table schema'</span>,
+      <span class="c-key">mimeType</span>: <span class="c-str">'text/plain'</span>,
+    },
+  ]
+}));
+
+<span class="c-comment">// ── READ — return the content for a given URI ─────</span>
+server.<span class="c-fn">setRequestHandler</span>(ReadResourceRequestSchema, <span class="c-cmd">async</span> (req) => {
+  <span class="c-cmd">const</span> { uri } = req.params;
+
+  <span class="c-key">if</span> (uri === <span class="c-str">'file:///config/settings.json'</span>) {
+    <span class="c-cmd">const</span> content = <span class="c-cmd">await</span> fs.<span class="c-fn">readFile</span>(<span class="c-str">'./config/settings.json'</span>, <span class="c-str">'utf-8'</span>);
+    <span class="c-key">return</span> {
+      <span class="c-key">contents</span>: [{ uri, <span class="c-key">mimeType</span>: <span class="c-str">'application/json'</span>, <span class="c-key">text</span>: content }]
+    };
+  }
+
+  <span class="c-key">if</span> (uri === <span class="c-str">'db://schema/users'</span>) {
+    <span class="c-key">return</span> {
+      <span class="c-key">contents</span>: [{
+        uri,
+        <span class="c-key">mimeType</span>: <span class="c-str">'text/plain'</span>,
+        <span class="c-key">text</span>: <span class="c-str">`CREATE TABLE users (
+  id      SERIAL PRIMARY KEY,
+  name    VARCHAR(255) NOT NULL,
+  email   VARCHAR(255) UNIQUE NOT NULL,
+  created TIMESTAMPTZ DEFAULT NOW()
+);`</span>
+      }]
+    };
+  }
+
+  <span class="c-key">throw new</span> Error(<span class="c-str">`Unknown resource URI: ${uri}`</span>);
+});</pre>
+    </div>
+
+    <div class="note">
+      <div class="note-icon">💡</div>
+      <p><strong>Resources vs Tools for data access:</strong> Use a <strong>Resource</strong> when the data is static or semi-static context (a file, a schema, a config). Use a <strong>Tool</strong> when fetching data requires dynamic arguments (search for user by ID, query by date range). Resources are indexed and listable; Tools are called with specific inputs.</p>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- SECTION 8 — LangChain + MistralAI Agent -->
+  <section class="section" id="agent">
+    <div class="section-header">
+      <div class="section-num-big">08</div>
+      <div class="section-title-block">
+        <div class="section-title">Build an Agent with LangChain + MistralAI</div>
+        <div class="section-subtitle">Connect your MCP server to a Mistral-powered agent in JavaScript</div>
+      </div>
+    </div>
+
+    <p>So far you've built an MCP server. Now let's build an <strong>agent</strong> that actually uses it. Instead of wiring it to Claude Desktop (a GUI), we'll write a JS script that connects to our server, loads its tools, and lets Mistral decide when to call them.</p>
+
+    <div class="concept">
+      <div class="concept-label">The idea in one line</div>
+      <p><code>@langchain/mcp-adapters</code> reads your MCP server's tools and turns them into LangChain tools. Then <code>createReactAgent</code> gives those tools to Mistral. The model decides when to call them — you just ask a question and get an answer.</p>
+    </div>
+
+    <div class="step-label">Step 1 — Install dependencies</div>
+    <div class="code-wrap">
+      <div class="code-header"><span class="code-label-el">Terminal</span><button class="copy-btn" onclick="copyCode(this)">copy</button></div>
+      <pre><span class="c-cmd">npm</span> <span class="c-flag">install</span> <span class="c-val">@langchain/mcp-adapters</span> <span class="c-val">@langchain/mistralai</span> <span class="c-val">@langchain/langgraph</span> <span class="c-val">@langchain/core</span> <span class="c-val">dotenv</span></pre>
+    </div>
+
+    <div class="step-label">Step 2 — Add your Mistral API key</div>
+    <div class="code-wrap">
+      <div class="code-header"><span class="code-label-el">.env</span><button class="copy-btn" onclick="copyCode(this)">copy</button></div>
+      <pre><span class="c-comment"># Get a free key at console.mistral.ai</span>
+<span class="c-key">MISTRAL_API_KEY</span>=<span class="c-str">your-api-key-here</span></pre>
+    </div>
+
+    <div class="step-label">Step 3 — Create the agent</div>
+    <div class="code-wrap">
+      <div class="code-header"><span class="code-label-el">agent.js</span><button class="copy-btn" onclick="copyCode(this)">copy</button></div>
+      <pre><span class="c-key">import</span> { MultiServerMCPClient } <span class="c-key">from</span> <span class="c-str">'@langchain/mcp-adapters'</span>;
+<span class="c-key">import</span> { ChatMistralAI }        <span class="c-key">from</span> <span class="c-str">'@langchain/mistralai'</span>;
+<span class="c-key">import</span> { createReactAgent }     <span class="c-key">from</span> <span class="c-str">'@langchain/langgraph/prebuilt'</span>;
+<span class="c-key">import</span> { HumanMessage }         <span class="c-key">from</span> <span class="c-str">'@langchain/core/messages'</span>;
+<span class="c-key">import</span> <span class="c-str">'dotenv/config'</span>;
+
+<span class="c-comment">// 1. Connect to your MCP server</span>
+<span class="c-cmd">const</span> client = <span class="c-cmd">new</span> MultiServerMCPClient({
+  <span class="c-key">mcpServers</span>: {
+    <span class="c-key">myServer</span>: {
+      <span class="c-key">transport</span>: <span class="c-str">'stdio'</span>,
+      <span class="c-key">command</span>:   <span class="c-str">'node'</span>,
+      <span class="c-key">args</span>:      [<span class="c-str">'./src/index.js'</span>], <span class="c-comment">// path to your MCP server</span>
+    },
+  },
+});
+
+<span class="c-comment">// 2. Load the tools from your server</span>
+<span class="c-cmd">const</span> tools = <span class="c-cmd">await</span> client.<span class="c-fn">getTools</span>();
+
+<span class="c-comment">// 3. Set up the Mistral model</span>
+<span class="c-cmd">const</span> model = <span class="c-cmd">new</span> ChatMistralAI({
+  <span class="c-key">model</span>:       <span class="c-str">'mistral-large-latest'</span>,
+  <span class="c-key">temperature</span>: <span class="c-val">0</span>,
+});
+
+<span class="c-comment">// 4. Create the agent — give it the model and tools</span>
+<span class="c-cmd">const</span> agent = <span class="c-fn">createReactAgent</span>({ <span class="c-key">llm</span>: model, <span class="c-key">tools</span> });
+
+<span class="c-comment">// 5. Ask a question — the agent calls your tools automatically</span>
+<span class="c-cmd">const</span> result = <span class="c-cmd">await</span> agent.<span class="c-fn">invoke</span>({
+  <span class="c-key">messages</span>: [<span class="c-cmd">new</span> HumanMessage(<span class="c-str">'What is the current server time?'</span>)],
+});
+
+console.<span class="c-fn">log</span>(result.messages.at(<span class="c-val">-1</span>).<span class="c-key">content</span>);
+
+<span class="c-comment">// 6. Clean up</span>
+<span class="c-cmd">await</span> client.<span class="c-fn">close</span>();</pre>
+    </div>
+
+    <div class="step-label green">Step 4 — Run it</div>
+    <div class="code-wrap">
+      <div class="code-header"><span class="code-label-el">Terminal</span><button class="copy-btn" onclick="copyCode(this)">copy</button></div>
+      <pre><span class="c-cmd">node</span> agent.js</pre>
+    </div>
+
+    <p>That's it. The agent reads your MCP server's tools, passes them to Mistral, and Mistral figures out which one to call — you don't wire anything manually.</p>
+
+    <div class="note">
+      <div class="note-icon">💡</div>
+      <p><strong>What's happening behind the scenes:</strong> <code>getTools()</code> calls <code>tools/list</code> on your MCP server and converts every tool into a LangChain tool object. <code>createReactAgent</code> runs a loop — Mistral sees the tools, decides to call one, gets the result back, and decides to answer or call another. You never write that loop yourself.</p>
+    </div>
+
+    <div class="warn">
+      <div class="note-icon">⚠️</div>
+      <p><strong>Always call <code>client.close()</code> at the end.</strong> The MCP client spawns your server as a child process. If you skip <code>close()</code>, that process keeps running in the background even after your script finishes.</p>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- SECTION 9 — Problems with MCP -->
+  <section class="section" id="mcp-problems">
+    <div class="section-header">
+      <div class="section-num-big">09</div>
+      <div class="section-title-block">
+        <div class="section-title">The Problems MCP Creates</div>
+        <div class="section-subtitle">MCP solves the integration problem — but introduces a new one: tool bloat</div>
+      </div>
+    </div>
+
+    <p>MCP is a massive improvement over custom integrations. But as teams connect more and more MCP servers, a new set of problems emerges. Understanding these is part of using MCP professionally.</p>
+
+    <h3>Problem 1 — Tool Definition Bloat in the Context Window</h3>
+
+    <div class="concept">
+      <div class="concept-label">The Core Problem</div>
+      <p>Every MCP tool connected to your AI agent has its <strong>full schema injected into the LLM's context window on every single request</strong> — its name, description, parameter types, and descriptions. The LLM needs to see all of this to know what's available. But context windows are finite, and tool schemas are expensive.</p>
+    </div>
+
+    <div class="token-bar-wrap">
+      <div class="token-bar-label">Token cost of tool metadata — real numbers</div>
+      <div class="token-row">
+        <div class="token-row-label">Playwright MCP server (21 tools)</div>
+        <div class="token-bar-outer"><div class="token-bar-inner" style="width:58%;background:#C84B1F;"><span class="token-bar-val">~11,700 tokens</span></div></div>
+      </div>
+      <div class="token-row">
+        <div class="token-row-label">Claude's built-in tools</div>
+        <div class="token-bar-outer"><div class="token-bar-inner" style="width:58%;background:#1B4587;"><span class="token-bar-val">~11,600 tokens</span></div></div>
+      </div>
+      <div class="token-row">
+        <div class="token-row-label">5 servers × 30 tools each</div>
+        <div class="token-bar-outer"><div class="token-bar-inner" style="width:100%;background:#B8860B;"><span class="token-bar-val">30,000–60,000 tokens</span></div></div>
+      </div>
+      <div class="token-row">
+        <div class="token-row-label">Mistral large context window</div>
+        <div class="token-bar-outer"><div class="token-bar-inner" style="width:100%;background:#1A6B4A;"><span class="token-bar-val">128,000 tokens</span></div></div>
+      </div>
+      <p style="font-size:12px;color:var(--muted);margin-top:8px;">5 MCP servers with 30 tools each can consume 25–50% of Mistral's context window before the user types their first message.</p>
+    </div>
+
+    <h3>Problem 2 — Wrong Tool Selection at Scale</h3>
+    <p>When a dozen tools are in context, the LLM sometimes picks the wrong one. If two tools have similar descriptions — <code>search_users</code> and <code>find_contacts</code> — the model gets confused. The more tools injected, the higher the interference between them, and the less reliably the LLM chooses the right one.</p>
+
+    <div class="scale-diagram">
+      <span class="hi">5 MCP servers connected simultaneously:</span><br>
+      &nbsp;&nbsp;Slack server: 12 tools · GitHub server: 18 tools<br>
+      &nbsp;&nbsp;Postgres server: 8 tools · Notion server: 14 tools · Your server: 6 tools<br>
+      &nbsp;&nbsp;= <span class="red">58 tool definitions injected — ~25,000 tokens — before any user message</span><br>
+      <br>
+      &nbsp;&nbsp;<span class="red">LLM calls create_slack_message when it should call create_github_issue</span><br>
+      &nbsp;&nbsp;<span class="red">Tool descriptions overlap → model picks wrong one → task fails</span>
+    </div>
+
+    <h3>Problem 3 — Higher API Cost Per Request</h3>
+    <p>Every API call to Mistral charges you per token. Tool definitions are injected into every single request — not just the ones where tools are used. A simple "what time is it?" question still injects all 58 tool schemas into the context. You pay for all those tokens every time.</p>
+
+    <h3>Problem 4 — Security Surface Area</h3>
+    <p>Every connected MCP server is a potential attack surface. MCP tools can execute code, read files, query databases, and send messages. A compromised or malicious MCP server could do real damage. The more servers you connect, the larger your attack surface. This is an active concern in the industry as of 2025.</p>
+
+    <h3>How the industry handles these problems</h3>
+    <table class="flag-table">
+      <thead><tr><th>Problem</th><th>Current best practice</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><span class="f-name">Tool bloat</span></td>
+          <td class="f-desc">Build focused MCP servers. Don't create one server for everything. One server per domain (one for GitHub, one for DB). Keep tool count under 10–15 per server.</td>
+        </tr>
+        <tr>
+          <td><span class="f-name">Wrong tool selection</span></td>
+          <td class="f-desc">Write extremely clear, distinct descriptions. Name tools unambiguously. In <code>MultiServerMCPClient</code>, use <code>prefixToolNameWithServerName: true</code> to avoid cross-server name collisions.</td>
+        </tr>
+        <tr>
+          <td><span class="f-name">Token cost</span></td>
+          <td class="f-desc">Only connect the MCP servers actually needed for a given agent. Lazy-load tool schemas. Use <code>mistral-small-latest</code> for simpler tasks to save cost while keeping tool-calling capability.</td>
+        </tr>
+        <tr>
+          <td><span class="f-name">Security</span></td>
+          <td class="f-desc">Vet community servers before running them. Sandbox server processes. Apply principle of least privilege — only expose the capabilities you actually need.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="concept">
+      <div class="concept-label">The Mental Model — MCP in 2025</div>
+      <p>MCP solved the <em>integration</em> problem — you no longer need custom glue code for every model-tool pair. It is now the industry standard, adopted by every major AI provider. But it introduced the <em>scale</em> problem — the more tools you connect, the worse the LLM performs. The skill in using MCP professionally is knowing what <strong>not</strong> to connect. Small, focused servers with fewer than 15 well-described tools consistently outperform one giant server with 100 tools.</p>
+    </div>
+  </section>
+
+  <footer>
+    <span>Sheryians Coding School · MCP Notes</span>
+    <span>Module: AI · Topic: Model Context Protocol</span>
+  </footer>
+
+</main>
+</div>
+
+<script>
+function copyCode(btn) {
+  const pre = btn.closest('.code-wrap').querySelector('pre');
+  navigator.clipboard.writeText(pre.innerText).then(() => {
+    btn.textContent = 'copied!';
+    setTimeout(() => btn.textContent = 'copy', 2000);
+  });
+}
+const sections = document.querySelectorAll('.section');
+const navLinks  = document.querySelectorAll('nav a');
+const observer  = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      navLinks.forEach(a => a.classList.remove('active'));
+      const link = document.querySelector(`nav a[href="#${e.target.id}"]`);
+      if (link) link.classList.add('active');
+    }
+  });
+}, { threshold: 0.3 });
+sections.forEach(s => observer.observe(s));
+</script>
+</body>
+</html>

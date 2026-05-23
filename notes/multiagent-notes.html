@@ -1,0 +1,855 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Multiagent Systems — Sheryians Coding School</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Fraunces:ital,wght@0,300;0,600;0,700;0,900;1,300&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#0E0F14;--paper:#F5F2EB;--paper2:#EDE9DF;--paper3:#E4DFD3;--rule:#D4CEBC;--muted:#6B6455;--accent:#C84B1F;--accent2:#1A6B4A;--accent3:#1B4587;--gold:#B8860B;--code-bg:#1A1C24;--code-text:#E2DCCC;--flag-c:#5BA4CF;--val-c:#F4A261;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--paper);color:var(--ink);font-family:'DM Sans',sans-serif;font-size:14.5px;line-height:1.7;}
+body::before{content:'SHERYIANS CODING SCHOOL';position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) rotate(-35deg);font-family:'IBM Plex Mono',monospace;font-size:42px;font-weight:600;color:rgba(200,75,31,0.045);white-space:nowrap;pointer-events:none;z-index:0;letter-spacing:0.12em;}
+.layout{display:flex;min-height:100vh;}
+nav{width:260px;flex-shrink:0;background:var(--ink);position:sticky;top:0;height:100vh;overflow-y:auto;padding:32px 0 40px;z-index:10;}
+.nav-brand{padding:0 24px 24px;border-bottom:1px solid rgba(255,255,255,0.07);margin-bottom:20px;}
+.nav-brand .logo{font-family:'Fraunces',serif;font-size:18px;font-weight:700;color:white;}
+.nav-brand .logo span{color:var(--accent);}
+.nav-brand .sub{font-family:'IBM Plex Mono',monospace;font-size:10px;color:rgba(255,255,255,0.35);letter-spacing:0.06em;margin-top:4px;}
+.nav-group-label{font-family:'IBM Plex Mono',monospace;font-size:9px;color:rgba(255,255,255,0.25);letter-spacing:0.12em;text-transform:uppercase;padding:0 24px;margin:16px 0 6px;}
+nav a{display:flex;align-items:center;gap:10px;padding:9px 24px;font-family:'DM Sans',sans-serif;font-size:12.5px;color:rgba(255,255,255,0.5);text-decoration:none;border-left:2px solid transparent;transition:all .15s;}
+nav a:hover{color:white;background:rgba(255,255,255,0.04);}
+nav a.active{color:white;border-left-color:var(--accent);background:rgba(200,75,31,0.08);}
+.nav-num{display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;background:rgba(255,255,255,0.08);font-family:'IBM Plex Mono',monospace;font-size:9px;border-radius:4px;flex-shrink:0;transition:all .15s;}
+nav a:hover .nav-num,nav a.active .nav-num{background:var(--accent);color:white;}
+main{flex:1;max-width:calc(99% - 260px);padding:56px 56px 80px;position:relative;z-index:1;}
+.hero{margin-bottom:64px;padding-bottom:40px;border-bottom:1px solid var(--rule);}
+.hero-eyebrow{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--accent);text-transform:uppercase;letter-spacing:0.12em;margin-bottom:14px;}
+.hero h1{font-family:'Fraunces',serif;font-size:clamp(36px,5vw,58px);font-weight:900;color:var(--ink);line-height:1.05;letter-spacing:-0.02em;margin-bottom:16px;}
+.hero h1 em{font-style:italic;color:var(--accent);}
+.hero-desc{font-family:'DM Sans',sans-serif;font-size:16px;color:var(--muted);max-width:560px;line-height:1.65;margin-bottom:20px;}
+.hero-tags{display:flex;flex-wrap:wrap;gap:8px;}
+.hero-tag{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--muted);border:1px solid var(--rule);border-radius:20px;padding:3px 12px;}
+.section{margin-bottom:72px;animation:fadeUp .4s ease both;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:translateY(0);}}
+.section-header{display:flex;align-items:flex-start;gap:16px;margin-bottom:28px;}
+.section-num-big{font-family:'Fraunces',serif;font-size:48px;font-weight:900;color:var(--rule);line-height:1;user-select:none;flex-shrink:0;}
+.section-title{font-family:'Fraunces',serif;font-size:26px;font-weight:700;color:var(--ink);line-height:1.2;}
+.section-subtitle{font-family:'DM Sans',sans-serif;font-size:13px;color:var(--muted);margin-top:4px;}
+h3{font-family:'Fraunces',serif;font-size:18px;font-weight:600;color:var(--ink);margin:28px 0 12px;}
+p{color:#2A2720;margin-bottom:12px;line-height:1.7;}
+strong{font-weight:500;color:var(--ink);}
+.concept{background:var(--paper2);border-left:3px solid var(--accent3);border-radius:0 8px 8px 0;padding:14px 16px;margin:16px 0;}
+.concept-label{font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--accent3);text-transform:uppercase;letter-spacing:0.12em;margin-bottom:6px;}
+.concept p{font-size:14px;line-height:1.65;margin-bottom:0;}
+.note{display:flex;gap:12px;background:#FEF9EC;border:1px solid #EDD97A;border-radius:8px;padding:12px 14px;margin:16px 0;}
+.note p{font-size:13px;color:#5C4A00;margin-bottom:0;}
+.note p strong{color:#3D3000;}
+.note-icon{flex-shrink:0;font-size:15px;}
+.warn{display:flex;gap:12px;background:#FEF2F2;border:1px solid #FCA5A5;border-radius:8px;padding:12px 14px;margin:16px 0;}
+.warn p{font-size:13px;color:#7F1D1D;margin-bottom:0;}
+.step-label{display:inline-block;font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:600;color:white;background:var(--accent);text-transform:uppercase;letter-spacing:0.06em;padding:3px 10px;border-radius:4px;margin:16px 0 8px;}
+.step-label.green{background:var(--accent2);}
+.step-label.blue{background:var(--accent3);}
+.step-label.gold{background:var(--gold);}
+.badge{display:inline-block;font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:600;color:white;background:var(--accent2);text-transform:uppercase;letter-spacing:0.06em;padding:2px 8px;border-radius:4px;margin-left:8px;vertical-align:middle;}
+.code-wrap{margin:16px 0;border-radius:8px;overflow:hidden;}
+.code-header{display:flex;align-items:center;justify-content:space-between;background:#13141B;padding:8px 14px;}
+.code-label{font-family:'IBM Plex Mono',monospace;font-size:10px;color:rgba(255,255,255,0.35);text-transform:uppercase;letter-spacing:0.08em;}
+.copy-btn{font-family:'IBM Plex Mono',monospace;font-size:10px;color:rgba(255,255,255,0.35);background:none;border:1px solid rgba(255,255,255,0.12);border-radius:4px;padding:2px 8px;cursor:pointer;transition:all .15s;}
+.copy-btn:hover{color:white;border-color:rgba(255,255,255,0.3);}
+.code-wrap pre{background:var(--code-bg);color:var(--code-text);font-family:'IBM Plex Mono',monospace;font-size:12.5px;line-height:1.8;padding:16px 18px;overflow-x:auto;margin:0;}
+.c-cmd{color:#87CEEB;font-weight:bold;}.c-flag{color:#5BA4CF;}.c-val{color:#F4A261;}.c-str{color:#98C379;}.c-comment{color:rgba(255,255,255,0.28);font-style:italic;}.c-key{color:#C678DD;}.c-fn{color:#61AFEF;}
+code{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--accent);background:var(--paper3);border:1px solid var(--rule);border-radius:4px;padding:1px 5px;}
+.flag-table{width:100%;border-collapse:collapse;margin:16px 0;}
+.flag-table th{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;background:var(--paper3);padding:8px 12px;text-align:left;font-weight:400;}
+.flag-table td{padding:9px 12px;border-bottom:1px solid var(--rule);font-size:13px;}
+.flag-table tr:hover td{background:var(--paper2);}
+.f-name{font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:600;color:var(--flag-c);}
+.f-val{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--val-c);}
+.f-desc{font-family:'DM Sans',sans-serif;font-size:13px;color:var(--ink);}
+.f-why{font-family:'DM Sans',sans-serif;font-size:12px;color:var(--muted);}
+.compare{width:100%;border-collapse:collapse;margin:16px 0;}
+.compare th{background:var(--ink);color:white;font-size:13px;font-weight:600;padding:10px 14px;text-align:left;}
+.compare th:first-child{border-radius:8px 0 0 0;}.compare th:last-child{border-radius:0 8px 0 0;}
+.compare td{padding:10px 14px;border-bottom:1px solid var(--rule);font-size:13px;}
+.compare tr:hover td{background:var(--paper2);}
+.row-label{font-weight:600;color:var(--ink);font-size:13px;}
+.local-val{color:var(--muted);}
+.eks-val{color:var(--accent2);font-weight:500;}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:16px 0;}
+.data-card{background:var(--paper2);border:1px solid var(--rule);border-radius:8px;padding:14px 16px;}
+.data-card-label{font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--accent);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:6px;}
+.data-card-title{font-family:'Fraunces',serif;font-size:15px;font-weight:600;color:var(--ink);margin-bottom:4px;}
+.data-card p{font-size:13px;color:var(--muted);margin-bottom:0;}
+.scale-diagram{background:var(--paper2);border:1px solid var(--rule);border-radius:10px;padding:16px 20px;font-family:'IBM Plex Mono',monospace;font-size:12px;line-height:2;margin:16px 0;color:var(--muted);}
+.scale-diagram .hi{color:var(--ink);font-weight:bold;}
+.scale-diagram .green{color:var(--accent2);}
+.scale-diagram .red{color:var(--accent);}
+.flow{margin:16px 0;}
+.flow-step{display:flex;}
+.flow-line{display:flex;flex-direction:column;align-items:center;width:28px;flex-shrink:0;}
+.flow-dot{width:10px;height:10px;border-radius:50%;background:var(--accent);flex-shrink:0;margin-top:4px;}
+.flow-connector{width:2px;background:var(--rule);flex:1;min-height:20px;}
+.flow-content{flex:1;padding:0 0 18px 10px;}
+.flow-title{font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;color:var(--ink);}
+.flow-detail{font-family:'DM Sans',sans-serif;font-size:12.5px;color:var(--muted);margin-top:2px;}
+.problem-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:16px 0;}
+.problem-card{border-radius:10px;padding:16px;border:1px solid var(--rule);background:var(--paper);}
+.problem-icon{font-size:24px;margin-bottom:8px;}
+.problem-title{font-family:'Fraunces',serif;font-size:15px;font-weight:700;color:var(--accent);margin-bottom:4px;}
+.problem-body{font-family:'DM Sans',sans-serif;font-size:13px;color:var(--muted);line-height:1.55;margin-bottom:8px;}
+.problem-fix{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--accent2);background:#EAF5EE;border-radius:4px;padding:3px 8px;display:inline-block;}
+.diagram-wrap{margin:24px 0;border-radius:12px;overflow:hidden;border:1px solid var(--rule);background:var(--paper);}
+.diagram-label{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;padding:10px 16px;border-bottom:1px solid var(--rule);background:var(--paper2);}
+hr.divider{border:none;border-top:1px solid var(--rule);margin:40px 0;}
+footer{display:flex;justify-content:space-between;align-items:center;border-top:2px solid var(--rule);padding:20px 56px;font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--muted);}
+@media(max-width:768px){nav{display:none;}main{padding:32px 24px 60px;max-width:100%;}.two-col,.problem-grid{grid-template-columns:1fr;}footer{padding:16px 24px;flex-direction:column;gap:6px;text-align:center;}}
+</style>
+</head>
+<body>
+<div class="layout">
+
+<nav>
+  <div class="nav-brand">
+    <div class="logo">Multi<span>.</span>Agent</div>
+    <div class="sub">Sheryians Coding School</div>
+  </div>
+  <div class="nav-group-label">The Problem</div>
+  <a href="#single-agent" class="active"><span class="nav-num">1</span>Single Agent Problems</a>
+  <a href="#what-is"><span class="nav-num">2</span>What is Multiagent?</a>
+  <div class="nav-group-label">Architecture</div>
+  <a href="#diagram"><span class="nav-num">3</span>Architecture Diagram</a>
+  <a href="#patterns"><span class="nav-num">4</span>Design Patterns</a>
+  <div class="nav-group-label">Implementation</div>
+  <a href="#setup"><span class="nav-num">5</span>LangChain Setup</a>
+  <a href="#sub-agents"><span class="nav-num">6</span>Building Sub-Agents</a>
+  <a href="#primary-agent"><span class="nav-num">7</span>Primary Agent</a>
+  <a href="#full-example"><span class="nav-num">8</span>Full Example</a>
+</nav>
+
+<main>
+
+  <div class="hero">
+    <div class="hero-eyebrow">Sheryians Coding School · AI Module</div>
+    <h1>Multiagent<br><em>Architecture</em></h1>
+    <p class="hero-desc">Why one LLM can't do everything well — and how to build a system of specialised agents that delegate, collaborate, and produce better results than any single agent could alone.</p>
+    <div class="hero-tags">
+      <span class="hero-tag">LangChain</span>
+      <span class="hero-tag">ChatMistralAI</span>
+      <span class="hero-tag">mistral-large-latest</span>
+      <span class="hero-tag">tool()</span>
+      <span class="hero-tag">createAgent</span>
+      <span class="hero-tag">Orchestration</span>
+    </div>
+  </div>
+
+  <!-- SECTION 1 — Single Agent Problems -->
+  <section class="section" id="single-agent">
+    <div class="section-header">
+      <div class="section-num-big">01</div>
+      <div class="section-title-block">
+        <div class="section-title">The Problem with a Single Agent</div>
+        <div class="section-subtitle">Why one LLM doing everything breaks down in production</div>
+      </div>
+    </div>
+
+    <p>Imagine asking one person to be your lawyer, accountant, doctor, and software engineer — all at the same time, in the same conversation. They'll give you average answers on everything rather than expert answers on anything. LLMs have the exact same problem.</p>
+
+    <div class="problem-grid">
+      <div class="problem-card">
+        <div class="problem-icon">🧠</div>
+        <div class="problem-title">Context Window Overflow</div>
+        <div class="problem-body">Every LLM has a maximum context window — typically 8K to 128K tokens. Complex tasks (research a topic, write code, review it, then deploy) quickly overflow this limit. The model starts "forgetting" earlier parts of the conversation.</div>
+        <span class="problem-fix">Fix → split tasks across agents, each with a fresh context</span>
+      </div>
+      <div class="problem-card">
+        <div class="problem-icon">👻</div>
+        <div class="problem-title">Hallucination Amplification</div>
+        <div class="problem-body">When a single agent handles the entire pipeline — research, reasoning, and output — one hallucination early in the chain poisons every downstream step. There's no checker, no verifier, no second opinion.</div>
+        <span class="problem-fix">Fix → reviewer agent independently verifies outputs</span>
+      </div>
+      <div class="problem-card">
+        <div class="problem-icon">🐌</div>
+        <div class="problem-title">Slow Sequential Processing</div>
+        <div class="problem-body">A single agent must do everything one after another. Research → then summarise → then write code → then test. Every step waits for the previous. With complex tasks this means very long wait times.</div>
+        <span class="problem-fix">Fix → parallel agents run simultaneously</span>
+      </div>
+      <div class="problem-card">
+        <div class="problem-icon">🎯</div>
+        <div class="problem-title">Jack of All Trades, Master of None</div>
+        <div class="problem-body">One agent given a massive system prompt trying to be a researcher, coder, writer, and analyst simultaneously produces mediocre results in all areas. Its attention and "focus" is diluted across too many roles.</div>
+        <span class="problem-fix">Fix → specialist agents with focused prompts</span>
+      </div>
+      <div class="problem-card">
+        <div class="problem-icon">💥</div>
+        <div class="problem-title">Single Point of Failure</div>
+        <div class="problem-body">If one step fails in a single-agent pipeline, the entire task fails. There's no fallback, no retry mechanism, no isolation. One bad tool call crashes the whole workflow.</div>
+        <span class="problem-fix">Fix → isolated agents fail independently</span>
+      </div>
+      <div class="problem-card">
+        <div class="problem-icon">🔧</div>
+        <div class="problem-title">Unmaintainable Prompts</div>
+        <div class="problem-body">As you try to make one agent do more things, its system prompt grows into a massive 2000-word instruction set. Changing one behaviour breaks another. It becomes impossible to test or improve.</div>
+        <span class="problem-fix">Fix → small focused prompts per agent, easy to tune</span>
+      </div>
+    </div>
+
+    <div class="scale-diagram">
+      <span class="hi">Single agent handling a "Build a product feature" task:</span><br>
+      &nbsp;<span class="red">→ Research market (uses 20K tokens)</span><br>
+      &nbsp;<span class="red">→ Write spec (uses 15K tokens) — already forgetting early research</span><br>
+      &nbsp;<span class="red">→ Write code (uses 30K tokens) — context limit hit, starts hallucinating</span><br>
+      &nbsp;<span class="red">→ Review code — forgets the spec, reviews against wrong criteria</span><br>
+      &nbsp;<span class="red">Result: inconsistent, hallucinated, slow ✗</span><br>
+      <br>
+      <span class="hi">Multiagent system:</span><br>
+      &nbsp;<span class="green">Research Agent → focused, full context, accurate research</span><br>
+      &nbsp;<span class="green">Spec Agent → reads research output, writes tight spec</span><br>
+      &nbsp;<span class="green">Code Agent → given spec only, writes clean code</span><br>
+      &nbsp;<span class="green">Review Agent → independently checks code against spec</span><br>
+      &nbsp;<span class="green">Result: accurate, fast, maintainable ✅</span>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- SECTION 2 — What is Multiagent -->
+  <section class="section" id="what-is">
+    <div class="section-header">
+      <div class="section-num-big">02</div>
+      <div class="section-title-block">
+        <div class="section-title">What is a Multiagent System?</div>
+        <div class="section-subtitle">Specialised agents that communicate — each an expert, together unstoppable</div>
+      </div>
+    </div>
+
+    <div class="concept">
+      <div class="concept-label">Key Concept</div>
+      <p>A <strong>multiagent system</strong> is a collection of AI agents where each agent has a specific role, its own system prompt, its own tools, and its own context window. A <strong>primary (orchestrator) agent</strong> receives the user's task, breaks it into subtasks, and delegates to <strong>sub-agents</strong> as tools. Each sub-agent does one thing extremely well and returns its result to the orchestrator, which assembles the final answer.</p>
+    </div>
+
+    <h3>Single Agent vs Multiagent</h3>
+    <table class="compare">
+      <thead><tr><th>Factor</th><th>Single Agent</th><th>Multiagent System</th></tr></thead>
+      <tbody>
+        <tr><td class="row-label">Context management</td><td class="local-val">One giant context that overflows on complex tasks</td><td class="eks-val">Each agent has its own focused context ✓</td></tr>
+        <tr><td class="row-label">Hallucination risk</td><td class="local-val">High — no verification step</td><td class="eks-val">Lower — reviewer agent catches errors ✓</td></tr>
+        <tr><td class="row-label">Speed</td><td class="local-val">Sequential — one thing at a time</td><td class="eks-val">Parallel agents can run simultaneously ✓</td></tr>
+        <tr><td class="row-label">Specialisation</td><td class="local-val">Mediocre at everything</td><td class="eks-val">Each agent is expert at one thing ✓</td></tr>
+        <tr><td class="row-label">Failure isolation</td><td class="local-val">One failure = total failure</td><td class="eks-val">Agents fail independently, retries possible ✓</td></tr>
+        <tr><td class="row-label">Maintainability</td><td class="local-val">One giant prompt — hard to debug</td><td class="eks-val">Small focused prompts — easy to tune ✓</td></tr>
+      </tbody>
+    </table>
+
+    <div class="note">
+      <div class="note-icon">💡</div>
+      <p><strong>Real-world analogy:</strong> A multiagent system is like a company. The CEO (primary agent) receives a goal and delegates to specialists — the legal team, the engineering team, the marketing team (sub-agents). Each team is expert in their domain and reports results back. The CEO assembles the final deliverable.</p>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- SECTION 3 — Architecture Diagram -->
+  <section class="section" id="diagram">
+    <div class="section-header">
+      <div class="section-num-big">03</div>
+      <div class="section-title-block">
+        <div class="section-title">Architecture Diagram</div>
+        <div class="section-subtitle">How the primary agent and three sub-agents connect</div>
+      </div>
+    </div>
+
+    <div class="diagram-wrap">
+      <div class="diagram-label">Multiagent System — Primary + 3 Sub-Agents (Mistral)</div>
+      <svg viewBox="0 0 780 500" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block;background:#F5F2EB;">
+        <defs>
+          <marker id="arr" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#D4CEBC"/></marker>
+          <marker id="arr-accent" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#C84B1F"/></marker>
+          <marker id="arr-green" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#1A6B4A"/></marker>
+          <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%"><feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="rgba(14,15,20,0.10)"/></filter>
+        </defs>
+        <rect x="330" y="18" width="120" height="44" rx="22" fill="#0E0F14" filter="url(#shadow)"/>
+        <text x="390" y="45" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="12" fill="white" font-weight="600">USER</text>
+        <line x1="390" y1="62" x2="390" y2="108" stroke="#C84B1F" stroke-width="1.5" stroke-dasharray="4,3" marker-end="url(#arr-accent)"/>
+        <text x="400" y="90" font-family="DM Sans,sans-serif" font-size="10" fill="#C84B1F">Task</text>
+        <rect x="230" y="110" width="320" height="86" rx="10" fill="#1B4587" filter="url(#shadow)"/>
+        <text x="390" y="138" text-anchor="middle" font-family="Fraunces,serif" font-size="15" fill="white" font-weight="700">Primary Agent</text>
+        <text x="390" y="156" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="10" fill="rgba(255,255,255,0.65)">Orchestrator · createReactAgent</text>
+        <text x="390" y="172" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="9" fill="rgba(255,255,255,0.45)">mistral-large-latest</text>
+        <text x="390" y="186" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="10" fill="rgba(255,255,255,0.50)">Receives task → plans → delegates to sub-agents</text>
+        <line x1="300" y1="196" x2="155" y2="268" stroke="#D4CEBC" stroke-width="1.5" marker-end="url(#arr)"/>
+        <line x1="390" y1="196" x2="390" y2="268" stroke="#D4CEBC" stroke-width="1.5" marker-end="url(#arr)"/>
+        <line x1="480" y1="196" x2="625" y2="268" stroke="#D4CEBC" stroke-width="1.5" marker-end="url(#arr)"/>
+        <text x="205" y="242" font-family="DM Sans,sans-serif" font-size="10" fill="#6B6455">tool call</text>
+        <text x="350" y="250" font-family="DM Sans,sans-serif" font-size="10" fill="#6B6455">tool call</text>
+        <text x="518" y="242" font-family="DM Sans,sans-serif" font-size="10" fill="#6B6455">tool call</text>
+        <rect x="60" y="270" width="190" height="96" rx="10" fill="#EDE9DF" stroke="#D4CEBC" stroke-width="1" filter="url(#shadow)"/>
+        <rect x="60" y="270" width="190" height="28" rx="10" fill="#C84B1F"/>
+        <rect x="60" y="284" width="190" height="14" fill="#C84B1F"/>
+        <text x="155" y="289" text-anchor="middle" font-family="Fraunces,serif" font-size="13" fill="white" font-weight="700">Research Agent</text>
+        <text x="155" y="313" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="9" fill="#6B6455">ROLE: gather information</text>
+        <text x="155" y="330" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="10" fill="#2A2720">Web search · scraping</text>
+        <text x="155" y="347" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="10" fill="#2A2720">API calls · summarisation</text>
+        <rect x="295" y="270" width="190" height="96" rx="10" fill="#EDE9DF" stroke="#D4CEBC" stroke-width="1" filter="url(#shadow)"/>
+        <rect x="295" y="270" width="190" height="28" rx="10" fill="#1A6B4A"/>
+        <rect x="295" y="284" width="190" height="14" fill="#1A6B4A"/>
+        <text x="390" y="289" text-anchor="middle" font-family="Fraunces,serif" font-size="13" fill="white" font-weight="700">Code Agent</text>
+        <text x="390" y="313" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="9" fill="#6B6455">ROLE: write &amp; execute code</text>
+        <text x="390" y="330" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="10" fill="#2A2720">Generate · run · debug</text>
+        <text x="390" y="347" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="10" fill="#2A2720">Node.js execution · tests</text>
+        <rect x="530" y="270" width="190" height="96" rx="10" fill="#EDE9DF" stroke="#D4CEBC" stroke-width="1" filter="url(#shadow)"/>
+        <rect x="530" y="270" width="190" height="28" rx="10" fill="#B8860B"/>
+        <rect x="530" y="284" width="190" height="14" fill="#B8860B"/>
+        <text x="625" y="289" text-anchor="middle" font-family="Fraunces,serif" font-size="13" fill="white" font-weight="700">Review Agent</text>
+        <text x="625" y="313" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="9" fill="#6B6455">ROLE: verify &amp; validate</text>
+        <text x="625" y="330" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="10" fill="#2A2720">Fact-check · quality review</text>
+        <text x="625" y="347" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="10" fill="#2A2720">Catches hallucinations</text>
+        <line x1="155" y1="366" x2="310" y2="420" stroke="#1A6B4A" stroke-width="1.5" stroke-dasharray="4,3" marker-end="url(#arr-green)"/>
+        <line x1="390" y1="366" x2="390" y2="420" stroke="#1A6B4A" stroke-width="1.5" stroke-dasharray="4,3" marker-end="url(#arr-green)"/>
+        <line x1="625" y1="366" x2="470" y2="420" stroke="#1A6B4A" stroke-width="1.5" stroke-dasharray="4,3" marker-end="url(#arr-green)"/>
+        <rect x="220" y="422" width="340" height="40" rx="8" fill="#E4DFD3" stroke="#D4CEBC" stroke-width="1"/>
+        <text x="390" y="447" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="11" fill="#6B6455" font-weight="500">Primary agent aggregates results → final response</text>
+        <line x1="390" y1="462" x2="390" y2="487" stroke="#1A6B4A" stroke-width="1.5" marker-end="url(#arr-green)"/>
+        <text x="390" y="498" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="10" fill="#1A6B4A">Final Answer to User</text>
+        <line x1="42" y1="455" x2="62" y2="455" stroke="#C84B1F" stroke-width="1.5" stroke-dasharray="4,3"/>
+        <text x="66" y="459" font-family="DM Sans,sans-serif" font-size="10" fill="#6B6455">Delegate (tool call)</text>
+        <line x1="42" y1="472" x2="62" y2="472" stroke="#1A6B4A" stroke-width="1.5" stroke-dasharray="4,3"/>
+        <text x="66" y="476" font-family="DM Sans,sans-serif" font-size="10" fill="#6B6455">Return result</text>
+      </svg>
+    </div>
+
+    <div class="note">
+      <div class="note-icon">💡</div>
+      <p><strong>Key insight from the diagram:</strong> Each sub-agent is <strong>registered as a tool</strong> on the primary agent using LangChain's <code>tool()</code> helper. From the primary agent's perspective, calling the Research Agent is identical to calling a weather API — it's just a tool that takes an input and returns an output. This is the elegant trick that makes the whole system work.</p>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- SECTION 4 — Patterns -->
+  <section class="section" id="patterns">
+    <div class="section-header">
+      <div class="section-num-big">04</div>
+      <div class="section-title-block">
+        <div class="section-title">Design Patterns</div>
+        <div class="section-subtitle">The four ways multiagent systems are structured — pick the right one</div>
+      </div>
+    </div>
+
+    <div class="two-col">
+      <div class="data-card">
+        <div class="data-card-label">Pattern 1</div>
+        <div class="data-card-title">Orchestrator → Workers</div>
+        <p>One primary agent delegates to specialist sub-agents as tools. Sub-agents report back, primary assembles the answer. <strong>This is what we're building.</strong> Best for: complex multi-step tasks.</p>
+      </div>
+      <div class="data-card">
+        <div class="data-card-label">Pattern 2</div>
+        <div class="data-card-title">Pipeline (Chain)</div>
+        <p>Agents run in sequence — Agent A's output feeds Agent B's input. No orchestrator needed. Best for: linear workflows like research → draft → review → publish.</p>
+      </div>
+      <div class="data-card">
+        <div class="data-card-label">Pattern 3</div>
+        <div class="data-card-title">Parallel Workers</div>
+        <p>Multiple agents run the same task simultaneously with different approaches. Results are compared or merged. Best for: consensus, fact-checking, reducing hallucination risk.</p>
+      </div>
+      <div class="data-card">
+        <div class="data-card-label">Pattern 4</div>
+        <div class="data-card-title">Debate / Critic</div>
+        <p>One agent generates output, another agent critiques it, the first revises. Repeat until quality threshold met. Best for: writing, code review, argument quality.</p>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- SECTION 5 — Setup -->
+  <section class="section" id="setup">
+    <div class="section-header">
+      <div class="section-num-big">05</div>
+      <div class="section-title-block">
+        <div class="section-title">LangChain + Mistral Setup</div>
+        <div class="section-subtitle">Install dependencies and configure the Mistral LLM — now using createAgent</div>
+      </div>
+    </div>
+
+    <div class="step-label">Step 1 — Install packages</div>
+    <div class="code-wrap">
+      <div class="code-header"><span class="code-label">Terminal</span><button class="copy-btn" onclick="copyCode(this)">copy</button></div>
+      <pre><span class="c-comment"># createAgent lives in the top-level 'langchain' package</span>
+<span class="c-cmd">npm</span> <span class="c-flag">install</span> <span class="c-val">langchain</span> <span class="c-val">@langchain/mistralai</span> <span class="c-val">@langchain/core</span>
+<span class="c-cmd">npm</span> <span class="c-flag">install</span> <span class="c-val">dotenv</span> <span class="c-val">zod</span>   <span class="c-comment"># zod for tool schemas — same as before</span></pre>
+    </div>
+
+    <div class="step-label">Step 2 — .env</div>
+    <div class="code-wrap">
+      <div class="code-header"><span class="code-label">.env</span></div>
+      <pre><span class="c-key">MISTRAL_API_KEY</span>=<span class="c-str">your-key-from-console.mistral.ai</span></pre>
+    </div>
+
+    <div class="note">
+      <div class="note-icon">💡</div>
+      <p><strong>Get a Mistral API key:</strong> Sign up at <strong>console.mistral.ai</strong> → API Keys → Create new key. Free tier available. Set the env var as <code>MISTRAL_API_KEY</code> — that's the exact variable name <code>ChatMistralAI</code> reads automatically.</p>
+    </div>
+
+    <div class="step-label">Step 3 — Shared LLM instance</div>
+    <div class="code-wrap">
+      <div class="code-header"><span class="code-label">src/llm.js</span><button class="copy-btn" onclick="copyCode(this)">copy</button></div>
+      <pre><span class="c-key">import</span> { ChatMistralAI } <span class="c-key">from</span> <span class="c-str">'@langchain/mistralai'</span>;  <span class="c-comment">// ← Mistral, not OpenAI</span>
+<span class="c-key">import</span> <span class="c-str">'dotenv/config'</span>;
+
+<span class="c-key">export const</span> llm = <span class="c-cmd">new</span> ChatMistralAI({
+  <span class="c-key">model</span>:       <span class="c-str">'mistral-large-latest'</span>,  <span class="c-comment">// best Mistral model for agents</span>
+  <span class="c-key">temperature</span>: <span class="c-val">0.3</span>,                   <span class="c-comment">// lower = more deterministic</span>
+  <span class="c-key">maxRetries</span>:  <span class="c-val">2</span>,                      <span class="c-comment">// auto-retry on transient errors</span>
+  <span class="c-comment">// apiKey is read automatically from process.env.MISTRAL_API_KEY</span>
+});</pre>
+    </div>
+
+    <h3>Mistral models at a glance</h3>
+    <table class="flag-table">
+      <thead><tr><th>Model</th><th>Best for</th><th>Tool calling</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><span class="f-name">mistral-large-latest</span></td>
+          <td class="f-desc">Complex reasoning, orchestrator agent — most capable</td>
+          <td class="f-val">✅ Yes</td>
+        </tr>
+        <tr>
+          <td><span class="f-name">mistral-small-latest</span></td>
+          <td class="f-desc">Fast sub-agents, simple tasks, lower cost</td>
+          <td class="f-val">✅ Yes</td>
+        </tr>
+        <tr>
+          <td><span class="f-name">codestral-latest</span></td>
+          <td class="f-desc">Specialist code generation sub-agent — purpose-built for code</td>
+          <td class="f-val">✅ Yes</td>
+        </tr>
+        <tr>
+          <td><span class="f-name">mistral-tiny</span></td>
+          <td class="f-desc">Cheapest — simple classification tasks only</td>
+          <td class="f-val">❌ No</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="warn">
+      <div class="note-icon">⚠️</div>
+      <p><strong>Tool calling requires a capable model.</strong> Not all Mistral models support tool/function calling. Always use <code>mistral-large-latest</code>, <code>mistral-small-latest</code>, or <code>codestral-latest</code> for agents. Using <code>mistral-tiny</code> with tools will throw a <code>422 extra_forbidden</code> error from Mistral's API.</p>
+    </div>
+
+    <h3>Core concepts in LangChain agents</h3>
+    <table class="flag-table">
+      <thead><tr><th>Concept</th><th>What it is</th><th>In our system</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><span class="f-name">createAgent</span></td>
+          <td class="f-desc">The modern high-level agent builder from <code>langchain</code>. Wraps LangGraph internally. No <code>AgentExecutor</code> or <code>ChatPromptTemplate</code> needed — just pass model, tools, and a system prompt string.</td>
+          <td class="f-why">Used to create all 4 agents (primary + 3 sub)</td>
+        </tr>
+        <tr>
+          <td><span class="f-name">tool()</span></td>
+          <td class="f-desc">The modern way to define a tool — takes a function and a config object with name, description, and Zod schema. Also used to wrap sub-agents so the primary agent can call them.</td>
+          <td class="f-why">Used to create all tools AND wrap sub-agents</td>
+        </tr>
+        <tr>
+          <td><span class="f-name">agent.invoke()</span></td>
+          <td class="f-desc">Runs the agent's reasoning loop directly. Takes <code>{ messages: [...] }</code> — no separate <code>AgentExecutor</code> needed. The loop runs until the model emits a final answer or hits the iteration limit.</td>
+          <td class="f-why">Called on each sub-agent executor and the primary agent</td>
+        </tr>
+        <tr>
+          <td><span class="f-name">systemPrompt</span></td>
+          <td class="f-desc">A plain string passed directly to <code>createAgent</code>. Replaces the verbose <code>ChatPromptTemplate.fromMessages([['system', ...]])</code> boilerplate from the old pattern.</td>
+          <td class="f-why">Defines each agent's personality and role</td>
+        </tr>
+        <tr>
+          <td><span class="f-name">z (Zod)</span></td>
+          <td class="f-desc">Schema library used to describe tool input shapes. LangChain uses Zod schemas to validate and document tool inputs for the LLM.</td>
+          <td class="f-why">Defines the input schema for every tool</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <hr class="divider">
+
+  <!-- SECTION 6 — Sub-Agents -->
+  <section class="section" id="sub-agents">
+    <div class="section-header">
+      <div class="section-num-big">06</div>
+      <div class="section-title-block">
+        <div class="section-title">Building the Three Sub-Agents</div>
+        <div class="section-subtitle">Each agent created with createAgent — then wrapped with tool()</div>
+      </div>
+    </div>
+
+    <div class="concept">
+      <div class="concept-label">The Pattern (createAgent)</div>
+      <p>Every sub-agent follows the same 3-step pattern: <strong>(1)</strong> Create it with <code>createAgent</code> from <code>langchain</code> — pass a <code>systemPrompt</code> string, the model, and its specific tools. No <code>ChatPromptTemplate</code>, no <code>agent_scratchpad</code>, no <code>AgentExecutor</code> needed. <strong>(2)</strong> Call <code>agent.invoke({ messages: [...] })</code> directly to run it. <strong>(3)</strong> Wrap the whole thing in a <code>tool()</code> with a Zod schema so the primary agent can call it like any other tool.</p>
+    </div>
+
+    <h3>Research Agent</h3>
+    <div class="code-wrap">
+      <div class="code-header"><span class="code-label">src/agents/researchAgent.js</span><button class="copy-btn" onclick="copyCode(this)">copy</button></div>
+      <pre><span class="c-key">import</span> { createAgent }       <span class="c-key">from</span> <span class="c-str">'langchain'</span>;               <span class="c-comment">// ← top-level langchain package</span>
+<span class="c-key">import</span> { tool }              <span class="c-key">from</span> <span class="c-str">'@langchain/core/tools'</span>;
+<span class="c-key">import</span> { ChatMistralAI }     <span class="c-key">from</span> <span class="c-str">'@langchain/mistralai'</span>;
+<span class="c-key">import</span> { z }                 <span class="c-key">from</span> <span class="c-str">'zod'</span>;
+<span class="c-key">import</span> <span class="c-str">'dotenv/config'</span>;
+
+<span class="c-cmd">const</span> llm = <span class="c-cmd">new</span> ChatMistralAI({ <span class="c-key">model</span>: <span class="c-str">'mistral-large-latest'</span>, <span class="c-key">temperature</span>: <span class="c-val">0.3</span> });
+
+<span class="c-comment">// Research agent's own internal tool</span>
+<span class="c-cmd">const</span> webSearchTool = <span class="c-fn">tool</span>(
+  <span class="c-cmd">async</span> ({ query }) => {
+    <span class="c-comment">// Replace with a real search API (Tavily, SerpAPI, Brave, etc.)</span>
+    <span class="c-key">return</span> <span class="c-str">`Search results for "${query}": [simulated results here]`</span>;
+  },
+  {
+    <span class="c-key">name</span>:        <span class="c-str">'web_search'</span>,
+    <span class="c-key">description</span>: <span class="c-str">'Search the internet for current information on a topic'</span>,
+    <span class="c-key">schema</span>: z.object({
+      <span class="c-key">query</span>: z.string().<span class="c-fn">describe</span>(<span class="c-str">'The search query to look up'</span>),
+    }),
+  }
+);
+
+<span class="c-comment">// createAgent — no ChatPromptTemplate, no AgentExecutor needed</span>
+<span class="c-cmd">const</span> researchAgent = <span class="c-fn">createAgent</span>({
+  <span class="c-key">model</span>:        llm,
+  <span class="c-key">tools</span>:        [webSearchTool],
+  <span class="c-key">systemPrompt</span>: <span class="c-str">`You are a specialist research agent. Your only job is to
+gather accurate, relevant information on a given topic.
+Use the web_search tool to find information.
+Return a concise, factual summary. Do not write code.
+Do not give opinions. Only report what you find.`</span>,
+});
+
+<span class="c-comment">// Wrap the agent as a tool for the primary orchestrator</span>
+<span class="c-key">export const</span> researchTool = <span class="c-fn">tool</span>(
+  <span class="c-cmd">async</span> ({ topic }) => {
+    <span class="c-cmd">const</span> result = <span class="c-cmd">await</span> researchAgent.<span class="c-fn">invoke</span>({
+      <span class="c-key">messages</span>: [{ <span class="c-key">role</span>: <span class="c-str">'user'</span>, <span class="c-key">content</span>: topic }],
+    });
+    <span class="c-comment">// result.messages — grab the last message (the agent's final answer)</span>
+    <span class="c-cmd">const</span> last = result.messages.at(<span class="c-val">-1</span>);
+    <span class="c-key">return</span> last?.content ?? <span class="c-str">''</span>;
+  },
+  {
+    <span class="c-key">name</span>:        <span class="c-str">'research_agent'</span>,
+    <span class="c-key">description</span>: <span class="c-str">'Use this to research any topic. Returns a factual summary. Input: the topic or question to research.'</span>,
+    <span class="c-key">schema</span>: z.object({
+      <span class="c-key">topic</span>: z.string().<span class="c-fn">describe</span>(<span class="c-str">'The topic or question to research'</span>),
+    }),
+  }
+);</pre>
+    </div>
+
+    <h3>Code Agent <span class="badge">codestral-latest</span></h3>
+    <div class="code-wrap">
+      <div class="code-header"><span class="code-label">src/agents/codeAgent.js</span><button class="copy-btn" onclick="copyCode(this)">copy</button></div>
+      <pre><span class="c-key">import</span> { createAgent }   <span class="c-key">from</span> <span class="c-str">'langchain'</span>;
+<span class="c-key">import</span> { tool }          <span class="c-key">from</span> <span class="c-str">'@langchain/core/tools'</span>;
+<span class="c-key">import</span> { ChatMistralAI } <span class="c-key">from</span> <span class="c-str">'@langchain/mistralai'</span>;
+<span class="c-key">import</span> { z }             <span class="c-key">from</span> <span class="c-str">'zod'</span>;
+<span class="c-key">import</span> <span class="c-str">'dotenv/config'</span>;
+
+<span class="c-comment">// Code agent uses Codestral — Mistral's purpose-built coding model</span>
+<span class="c-cmd">const</span> codeLLM = <span class="c-cmd">new</span> ChatMistralAI({
+  <span class="c-key">model</span>:       <span class="c-str">'codestral-latest'</span>,  <span class="c-comment">// specialist model just for code</span>
+  <span class="c-key">temperature</span>: <span class="c-val">0.1</span>,                 <span class="c-comment">// very low — code must be precise</span>
+});
+
+<span class="c-cmd">const</span> codeAgent = <span class="c-fn">createAgent</span>({
+  <span class="c-key">model</span>:        codeLLM,
+  <span class="c-key">tools</span>:        [],        <span class="c-comment">// code agent needs no external tools</span>
+  <span class="c-key">systemPrompt</span>: <span class="c-str">`You are a specialist code writing agent. Your only job
+is to write clean, working JavaScript/Node.js code based on
+the specification given to you.
+Write complete, runnable code with comments.
+Do not do research. Do not review. Only write code.`</span>,
+});
+
+<span class="c-key">export const</span> codeTool = <span class="c-fn">tool</span>(
+  <span class="c-cmd">async</span> ({ specification }) => {
+    <span class="c-cmd">const</span> result = <span class="c-cmd">await</span> codeAgent.<span class="c-fn">invoke</span>({
+      <span class="c-key">messages</span>: [{ <span class="c-key">role</span>: <span class="c-str">'user'</span>, <span class="c-key">content</span>: specification }],
+    });
+    <span class="c-cmd">const</span> last = result.messages.at(<span class="c-val">-1</span>);
+    <span class="c-key">return</span> last?.content ?? <span class="c-str">''</span>;
+  },
+  {
+    <span class="c-key">name</span>:        <span class="c-str">'code_agent'</span>,
+    <span class="c-key">description</span>: <span class="c-str">'Use this to write code. Input: a clear description of what the code should do. Returns working JavaScript/Node.js code.'</span>,
+    <span class="c-key">schema</span>: z.object({
+      <span class="c-key">specification</span>: z.string().<span class="c-fn">describe</span>(<span class="c-str">'A clear description of the code to write'</span>),
+    }),
+  }
+);</pre>
+    </div>
+
+    <h3>Review Agent</h3>
+    <div class="code-wrap">
+      <div class="code-header"><span class="code-label">src/agents/reviewAgent.js</span><button class="copy-btn" onclick="copyCode(this)">copy</button></div>
+      <pre><span class="c-key">import</span> { createAgent }   <span class="c-key">from</span> <span class="c-str">'langchain'</span>;
+<span class="c-key">import</span> { tool }          <span class="c-key">from</span> <span class="c-str">'@langchain/core/tools'</span>;
+<span class="c-key">import</span> { ChatMistralAI } <span class="c-key">from</span> <span class="c-str">'@langchain/mistralai'</span>;
+<span class="c-key">import</span> { z }             <span class="c-key">from</span> <span class="c-str">'zod'</span>;
+<span class="c-key">import</span> <span class="c-str">'dotenv/config'</span>;
+
+<span class="c-cmd">const</span> llm = <span class="c-cmd">new</span> ChatMistralAI({ <span class="c-key">model</span>: <span class="c-str">'mistral-large-latest'</span>, <span class="c-key">temperature</span>: <span class="c-val">0.3</span> });
+
+<span class="c-cmd">const</span> reviewAgent = <span class="c-fn">createAgent</span>({
+  <span class="c-key">model</span>:        llm,
+  <span class="c-key">tools</span>:        [],
+  <span class="c-key">systemPrompt</span>: <span class="c-str">`You are a specialist review and quality-assurance agent.
+Your only job is to critically review content or code given to you.
+Check for: accuracy, completeness, logical errors, hallucinations,
+security issues (for code), and missing edge cases.
+Be specific about what is wrong and what needs to change.
+Do not write new content. Only review and give feedback.`</span>,
+});
+
+<span class="c-key">export const</span> reviewTool = <span class="c-fn">tool</span>(
+  <span class="c-cmd">async</span> ({ content }) => {
+    <span class="c-cmd">const</span> result = <span class="c-cmd">await</span> reviewAgent.<span class="c-fn">invoke</span>({
+      <span class="c-key">messages</span>: [{ <span class="c-key">role</span>: <span class="c-str">'user'</span>, <span class="c-key">content</span>: content }],
+    });
+    <span class="c-cmd">const</span> last = result.messages.at(<span class="c-val">-1</span>);
+    <span class="c-key">return</span> last?.content ?? <span class="c-str">''</span>;
+  },
+  {
+    <span class="c-key">name</span>:        <span class="c-str">'review_agent'</span>,
+    <span class="c-key">description</span>: <span class="c-str">'Use this to review and validate any content or code for quality, accuracy, and correctness. Input: the content to review. Returns detailed feedback.'</span>,
+    <span class="c-key">schema</span>: z.object({
+      <span class="c-key">content</span>: z.string().<span class="c-fn">describe</span>(<span class="c-str">'The content or code to review and validate'</span>),
+    }),
+  }
+);</pre>
+    </div>
+
+    <div class="note">
+      <div class="note-icon">💡</div>
+      <p><strong>What changed vs createReactAgent?</strong> Three things are now gone: <code>ChatPromptTemplate.fromMessages()</code>, the <code>agent_scratchpad</code> placeholder, and <code>AgentExecutor</code>. With <code>createAgent</code> you write a plain <code>systemPrompt</code> string and call <code>agent.invoke({ messages: [...] })</code> directly. Also note the response shape: <code>createAgent</code> returns <code>{ messages: [...] }</code> instead of <code>{ output: '...' }</code>, so we extract the final answer with <code>result.messages.at(-1)?.content</code>.</p>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- SECTION 7 — Primary Agent -->
+  <section class="section" id="primary-agent">
+    <div class="section-header">
+      <div class="section-num-big">07</div>
+      <div class="section-title-block">
+        <div class="section-title">The Primary (Orchestrator) Agent</div>
+        <div class="section-subtitle">The agent that takes the user's task and decides which sub-agents to call</div>
+      </div>
+    </div>
+
+    <div class="code-wrap">
+      <div class="code-header"><span class="code-label">src/agents/primaryAgent.js</span><button class="copy-btn" onclick="copyCode(this)">copy</button></div>
+      <pre><span class="c-key">import</span> { createReactAgent, AgentExecutor } <span class="c-key">from</span> <span class="c-str">'langchain/agents'</span>;
+<span class="c-key">import</span> { ChatPromptTemplate }              <span class="c-key">from</span> <span class="c-str">'@langchain/core/prompts'</span>;
+<span class="c-key">import</span> { llm }                             <span class="c-key">from</span> <span class="c-str">'../llm.js'</span>;
+
+<span class="c-comment">// Import sub-agents — each is already wrapped as a tool() export</span>
+<span class="c-key">import</span> { researchTool } <span class="c-key">from</span> <span class="c-str">'./researchAgent.js'</span>;
+<span class="c-key">import</span> { codeTool }     <span class="c-key">from</span> <span class="c-str">'./codeAgent.js'</span>;
+<span class="c-key">import</span> { reviewTool }   <span class="c-key">from</span> <span class="c-str">'./reviewAgent.js'</span>;
+
+<span class="c-comment">// All sub-agents registered as tools on the orchestrator</span>
+<span class="c-cmd">const</span> tools = [researchTool, codeTool, reviewTool];
+
+<span class="c-comment">// Orchestrator prompt — high-level planning, not execution</span>
+<span class="c-cmd">const</span> primaryPrompt = ChatPromptTemplate.<span class="c-fn">fromMessages</span>([
+  [<span class="c-str">'system'</span>, <span class="c-str">`You are the primary orchestrator agent. You receive complex
+tasks from the user and coordinate specialist sub-agents to complete them.
+
+You have three tools:
+- research_agent: use when you need facts, information, or data
+- code_agent: use when you need to write or generate code
+- review_agent: use when you need to verify, check, or validate content
+
+Your job is to:
+1. Break the task into subtasks
+2. Delegate each subtask to the right specialist agent
+3. Use the review_agent to verify important outputs
+4. Assemble and return a complete, high-quality final answer
+
+Always review code before returning it. Always verify facts when accuracy matters.`</span>],
+  [<span class="c-str">'human'</span>, <span class="c-str">'{input}'</span>],
+  [<span class="c-str">'placeholder'</span>, <span class="c-str">'{agent_scratchpad}'</span>],
+]);
+
+<span class="c-cmd">const</span> primaryAgent = <span class="c-cmd">await</span> <span class="c-fn">createReactAgent</span>({
+  <span class="c-key">llm</span>,          <span class="c-comment">// mistral-large-latest from llm.js</span>
+  <span class="c-key">tools</span>,
+  <span class="c-key">prompt</span>: primaryPrompt,
+});
+
+<span class="c-key">export const</span> primaryExecutor = <span class="c-cmd">new</span> AgentExecutor({
+  <span class="c-key">agent</span>:                   primaryAgent,
+  <span class="c-key">tools</span>,
+  <span class="c-key">verbose</span>:                 <span class="c-val">true</span>,   <span class="c-comment">// log each step so you can see delegation</span>
+  <span class="c-key">maxIterations</span>:           <span class="c-val">10</span>,    <span class="c-comment">// prevent infinite loops</span>
+  <span class="c-key">returnIntermediateSteps</span>: <span class="c-val">true</span>,  <span class="c-comment">// expose which agent was called + outputs</span>
+});</pre>
+    </div>
+
+    <div class="warn">
+      <div class="note-icon">⚠️</div>
+      <p><strong>Always set <code>maxIterations</code>.</strong> Without it, a confused agent can loop forever, calling tools repeatedly and burning API credits. 10 iterations is a safe limit for most tasks — the agent will stop and return whatever it has if it hits the limit.</p>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- SECTION 8 — Full Example -->
+  <section class="section" id="full-example">
+    <div class="section-header">
+      <div class="section-num-big">08</div>
+      <div class="section-title-block">
+        <div class="section-title">Full Working Example</div>
+        <div class="section-subtitle">Entry point, folder structure, and what the agent trace looks like</div>
+      </div>
+    </div>
+
+    <div class="step-label">Entry point</div>
+    <div class="code-wrap">
+      <div class="code-header"><span class="code-label">src/index.js</span><button class="copy-btn" onclick="copyCode(this)">copy</button></div>
+      <pre><span class="c-key">import</span> { primaryExecutor } <span class="c-key">from</span> <span class="c-str">'./agents/primaryAgent.js'</span>;
+
+<span class="c-cmd">const</span> task = <span class="c-str">`
+  Research what a REST API is, then write a simple Express.js
+  REST API with GET and POST routes for a todos list,
+  then review the code for any issues.
+`</span>;
+
+<span class="c-cmd">const</span> result = <span class="c-cmd">await</span> primaryExecutor.<span class="c-fn">invoke</span>({ <span class="c-key">input</span>: task });
+
+console.<span class="c-fn">log</span>(<span class="c-str">'\n=== FINAL ANSWER ==='</span>);
+console.<span class="c-fn">log</span>(result.output);
+
+<span class="c-comment">// See every step — which sub-agent was called and what it returned</span>
+console.<span class="c-fn">log</span>(<span class="c-str">'\n=== AGENT STEPS ==='</span>);
+result.intermediateSteps.<span class="c-fn">forEach</span>((step, i) => {
+  console.<span class="c-fn">log</span>(<span class="c-str">`Step ${i + 1}: Called → ${step.action.tool}`</span>);
+  console.<span class="c-fn">log</span>(<span class="c-str">`  Input:  ${JSON.stringify(step.action.toolInput)}`</span>);
+  console.<span class="c-fn">log</span>(<span class="c-str">`  Output: ${String(step.observation).slice(0, 120)}...`</span>);
+});</pre>
+    </div>
+
+    <div class="step-label blue">Folder structure</div>
+    <div class="code-wrap">
+      <div class="code-header"><span class="code-label">project layout</span></div>
+      <pre><span class="c-val">multiagent-mistral/</span>
+├── <span class="c-key">src/</span>
+│   ├── <span class="c-str">llm.js</span>                   <span class="c-comment">← shared ChatMistralAI instance (mistral-large-latest)</span>
+│   ├── <span class="c-str">index.js</span>                 <span class="c-comment">← entry point — run tasks here</span>
+│   └── <span class="c-key">agents/</span>
+│       ├── <span class="c-str">researchAgent.js</span>     <span class="c-comment">← Research sub-agent + tool() export</span>
+│       ├── <span class="c-str">codeAgent.js</span>         <span class="c-comment">← Code sub-agent (Codestral) + tool() export</span>
+│       ├── <span class="c-str">reviewAgent.js</span>       <span class="c-comment">← Review sub-agent + tool() export</span>
+│       └── <span class="c-str">primaryAgent.js</span>      <span class="c-comment">← Orchestrator — imports all tools</span>
+├── <span class="c-str">.env</span>                         <span class="c-comment">← MISTRAL_API_KEY=...</span>
+└── <span class="c-str">package.json</span>                 <span class="c-comment">← type: "module" for ESM imports</span></pre>
+    </div>
+
+    <div class="note">
+      <div class="note-icon">💡</div>
+      <p><strong>Add <code>"type": "module"</code> to package.json</strong> to use ES module <code>import</code> syntax throughout. Your <code>package.json</code> should include: <code>"type": "module"</code> and a start script like <code>"start": "node src/index.js"</code>.</p>
+    </div>
+
+    <div class="step-label green">What the agent trace looks like</div>
+    <div class="code-wrap">
+      <div class="code-header"><span class="code-label">Terminal output (verbose: true)</span></div>
+      <pre><span class="c-comment">> Entering new AgentExecutor chain...</span>
+
+<span class="c-val">Thought:</span> I need to research REST APIs, then write code, then review it.
+         I'll start by calling the research_agent.
+
+<span class="c-key">Action:</span>       research_agent
+<span class="c-str">Action Input:</span> { "topic": "What is a REST API and its core principles?" }
+<span class="c-val">Observation:</span>  REST (Representational State Transfer) is an architectural
+              style that uses HTTP methods: GET, POST, PUT, DELETE...
+
+<span class="c-key">Action:</span>       code_agent
+<span class="c-str">Action Input:</span> { "specification": "Write an Express.js REST API with GET /todos and POST /todos" }
+<span class="c-val">Observation:</span>  const express = require('express'); const app = express()...
+
+<span class="c-key">Action:</span>       review_agent
+<span class="c-str">Action Input:</span> { "content": "Review this Express code for issues: [code here]" }
+<span class="c-val">Observation:</span>  Issues found: missing error handling on POST route,
+              no input validation for todo text field...
+
+<span class="c-val">Final Answer:</span> Here is a researched, written, and reviewed Express REST API...
+
+<span class="c-comment">Step 1: Called → research_agent</span>
+<span class="c-comment">Step 2: Called → code_agent</span>
+<span class="c-comment">Step 3: Called → review_agent</span></pre>
+    </div>
+
+    <h3>Key takeaways</h3>
+    <table class="flag-table">
+      <thead><tr><th>What we built</th><th>Why it matters</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><span class="f-name">ChatMistralAI</span></td>
+          <td class="f-desc">Drop-in replacement for ChatOpenAI. Reads <code>MISTRAL_API_KEY</code> from env. Use <code>mistral-large-latest</code> for orchestration and <code>codestral-latest</code> for the code specialist.</td>
+        </tr>
+        <tr>
+          <td><span class="f-name">tool() + Zod schema</span></td>
+          <td class="f-desc">Modern replacement for <code>DynamicTool</code>. Zod schemas give Mistral's function-calling precise knowledge of parameter names and types — far more reliable than string-only descriptions.</td>
+        </tr>
+        <tr>
+          <td><span class="f-name">Sub-agents as tools</span></td>
+          <td class="f-desc">The primary agent sees sub-agents exactly like any other tool. This is the key design insight — agents become infinitely composable with zero extra framework.</td>
+        </tr>
+        <tr>
+          <td><span class="f-name">Automatic delegation</span></td>
+          <td class="f-desc">Mistral's function-calling decides when and which sub-agent to call based on the task. You never hardcode the workflow — the LLM plans it.</td>
+        </tr>
+        <tr>
+          <td><span class="f-name">maxIterations safety</span></td>
+          <td class="f-desc">Prevents infinite agent loops. Production systems always set this. Without it you'll burn API budget on a stuck agent that never returns.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="concept">
+      <div class="concept-label">The Big Picture</div>
+      <p>This pattern is exactly how production AI products work today. Cursor uses a code agent, a reviewer agent, and a planner. Devin is a multiagent system with specialised sub-agents. By switching from OpenAI to <strong>Mistral</strong> here, you're using one of the most capable open-weights model families available — with function calling, competitive pricing, and a model purpose-built for code (<strong>Codestral</strong>). <strong>The future of software development is writing agents that write software</strong> — and understanding how to architect them well is one of the most valuable skills you can have right now.</p>
+    </div>
+  </section>
+
+  <footer>
+    <span>Sheryians Coding School · Multiagent Notes</span>
+    <span>Stack: LangChain JS · ChatMistralAI · mistral-large-latest · tool() + Zod</span>
+  </footer>
+
+</main>
+</div>
+
+<script>
+function copyCode(btn) {
+  const pre = btn.closest('.code-wrap').querySelector('pre');
+  navigator.clipboard.writeText(pre.innerText).then(() => {
+    btn.textContent = 'copied!';
+    setTimeout(() => btn.textContent = 'copy', 2000);
+  });
+}
+const sections = document.querySelectorAll('.section');
+const navLinks  = document.querySelectorAll('nav a');
+const observer  = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      navLinks.forEach(a => a.classList.remove('active'));
+      const link = document.querySelector(`nav a[href="#${e.target.id}"]`);
+      if (link) link.classList.add('active');
+    }
+  });
+}, { threshold: 0.3 });
+sections.forEach(s => observer.observe(s));
+</script>
+</body>
+</html>
