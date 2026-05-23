@@ -24,7 +24,7 @@ connectToMongoDB();
 
 
 // ---- Redis Connection ----
-const redis = new Redis("redis://localhost:6379");
+const redis = new Redis(process.env.REDIS_URL);
 
 redis.once("ready", () => {
     console.log("Connected to Redis");
